@@ -388,6 +388,43 @@ unsigned long crossrun_get_exit_code (crossrun handle)
   return (unsigned long)handle->exitcode;
 }
 
+void crossrun_close (crossrun handle)
+{
+#ifdef _WIN32
+  if (handle->stdin_pipe[PIPE_WRITE]) {
+    CloseHandle(handle->stdin_pipe[PIPE_WRITE]);
+    handle->stdin_pipe[PIPE_WRITE] = NULL;
+  }
+  if (handle->stdout_pipe[PIPE_READ]) {
+    CloseHandle(handle->stdout_pipe[PIPE_READ]);
+    handle->stdout_pipe[PIPE_READ] = NULL;
+  }
+#ifdef WITH_STDERR
+  if (handle->stderr_pipe[PIPE_READ]) {
+    CloseHandle(handle->stderr_pipe[PIPE_READ]);
+    handle->stderr_pipe[PIPE_READ] = NULL;
+  }
+#endif
+  CloseHandle(handle->proc_info.hProcess);
+#else
+  if (handle->stdin_pipe[PIPE_WRITE] >= 0) {
+    close(handle->stdin_pipe[PIPE_WRITE]);
+    handle->stdin_pipe[PIPE_WRITE] = -1;
+  }
+  if (handle->stdout_pipe[PIPE_READ] >= 0) {
+    close(handle->stdout_pipe[PIPE_READ]);
+    handle->stdout_pipe[PIPE_READ] = -1;
+  }
+#ifdef WITH_STDERR
+  if (handle->stderr_pipe[PIPE_READ] >= 0) {
+    close(handle->stderr_pipe[PIPE_READ]);
+    handle->stderr_pipe[PIPE_READ] = -1;
+  }
+#endif
+  //kill(handle->pid, SIGTERM);
+#endif
+}
+
 void crossrun_kill (crossrun handle)
 {
 #ifdef _WIN32
@@ -397,29 +434,11 @@ void crossrun_kill (crossrun handle)
 #endif
 }
 
-void crossrun_close (crossrun handle)
+void crossrun_free (crossrun handle)
 {
-#ifdef _WIN32
-  if (handle->stdin_pipe[PIPE_WRITE]) {
-    CloseHandle(handle->stdin_pipe[PIPE_WRITE]);
-    handle->stdin_pipe[PIPE_WRITE] = NULL;
-  }
-  CloseHandle(handle->stdout_pipe[PIPE_READ]);
-#ifdef WITH_STDERR
-  CloseHandle(handle->stderr_pipe[PIPE_READ]);
-#endif
-  CloseHandle(handle->proc_info.hProcess);
-#else
-  if (handle->stdin_pipe[PIPE_WRITE] >= 0) {
-    close(handle->stdin_pipe[PIPE_WRITE]);
-    handle->stdin_pipe[PIPE_WRITE] = -1;
-  }
-  close(handle->stdout_pipe[PIPE_READ]);
-#ifdef WITH_STDERR
-  close(handle->stderr_pipe[PIPE_READ]);
-#endif
-  kill(handle->pid, SIGTERM);
-#endif
+  if (!handle)
+    return;
+  crossrun_close(handle);
   free(handle);
 }
 

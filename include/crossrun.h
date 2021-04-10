@@ -12,9 +12,9 @@
 /*! \brief major version number */
 #define CROSSRUN_VERSION_MAJOR 0
 /*! \brief minor version number */
-#define CROSSRUN_VERSION_MINOR 0
+#define CROSSRUN_VERSION_MINOR 1
 /*! \brief micro version number */
-#define CROSSRUN_VERSION_MICRO 3
+#define CROSSRUN_VERSION_MICRO 0
 /*! @} */
 
 /*! \brief packed version number */
@@ -52,7 +52,7 @@ DLL_EXPORT_CROSSRUN void crossrun_get_version (int* pmajor, int* pminor, int* pm
  */
 DLL_EXPORT_CROSSRUN const char* crossrun_get_version_string ();
 
-//!data type for handling a shell process
+//!data type for handling shell process
 typedef struct crossrun_data* crossrun;
 
 //!open a shell process
@@ -69,7 +69,7 @@ DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv env
 */
 DLL_EXPORT_CROSSRUN int crossrun_stopped (crossrun handle);
 
-//!wait for a shell process to finish
+//!wait for shell process to finish
 /*!
   \param  handle      shell process handle
   \return 0 if process is still running, nonzero if process is no longer running
@@ -83,17 +83,23 @@ DLL_EXPORT_CROSSRUN int crossrun_wait (crossrun handle);
 */
 DLL_EXPORT_CROSSRUN unsigned long crossrun_get_exit_code (crossrun handle);
 
-//!kill a shell process
-/*!
-  \param  handle      shell process handle
-*/
-DLL_EXPORT_CROSSRUN void crossrun_kill (crossrun handle);
-
 //!tell shell process to close down (you should wait for it or kill it) and free handle
 /*!
   \param  handle      shell process handle
 */
 DLL_EXPORT_CROSSRUN void crossrun_close (crossrun handle);
+
+//!kill shell process
+/*!
+  \param  handle      shell process handle
+*/
+DLL_EXPORT_CROSSRUN void crossrun_kill (crossrun handle);
+
+//!clean up shell process handle
+/*!
+  \param  handle      shell process handle
+*/
+DLL_EXPORT_CROSSRUN void crossrun_free (crossrun handle);
 
 //!check if data is waiting to be read from a shell process
 /*!

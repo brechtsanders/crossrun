@@ -63,7 +63,7 @@ else
 OS_LINK_FLAGS = -shared -Wl,-soname,$@ $(STRIPFLAG)
 endif
 
-#UTILS_BIN = src/myapplication$(BINEXT)
+UTILS_BIN = test_process$(BINEXT) tests$(BINEXT)
 
 COMMON_PACKAGE_FILES = README.md LICENSE Changelog.txt
 SOURCE_PACKAGE_FILES = $(COMMON_PACKAGE_FILES) Makefile doc/Doxyfile include/*.h lib/*.c build/*.workspace build/*.cbp build/*.depend
@@ -81,23 +81,23 @@ all: static-lib shared-lib utils
 %.shared.o: %.c
 	$(CC) -c -o $@ $< $(SHARED_CFLAGS) $(CFLAGS)
 
-static-lib: $(LIBPREFIX)mylibrary$(LIBEXT)
+static-lib: $(LIBPREFIX)crossrun$(LIBEXT)
 
-shared-lib: $(SOLIBPREFIX)mylibrary$(SOEXT)
+shared-lib: $(SOLIBPREFIX)crossrun$(SOEXT)
 
-$(LIBPREFIX)mylibrary$(LIBEXT): $(LIBCROSSRUN_OBJ:%.o=%.static.o)
+$(LIBPREFIX)crossrun$(LIBEXT): $(LIBCROSSRUN_OBJ:%.o=%.static.o)
 	$(AR) cr $@ $^
 
-$(SOLIBPREFIX)mylibrary$(SOEXT): $(LIBCROSSRUN_OBJ:%.o=%.shared.o)
+$(SOLIBPREFIX)crossrun$(SOEXT): $(LIBCROSSRUN_OBJ:%.o=%.shared.o)
 	$(CC) -o $@ $(OS_LINK_FLAGS) $^ $(LIBCROSSRUN_SHARED_LDFLAGS) $(LIBCROSSRUN_LDFLAGS) $(LDFLAGS) $(LIBS)
 
 utils: $(UTILS_BIN)
 
-#src/myapplication_s$(BINEXT): %$(BINEXT): %.static.o $(LIBPREFIX)mylibrary$(LIBEXT)
-#	$(CC) $(STRIPFLAG) -o $@ $^ $(LIBCROSSRUN_LDFLAGS) $(LDFLAGS)
+test_process$(BINEXT): tests/test_process.shared.o $(SOLIBPREFIX)crossrun$(SOEXT)
+	$(CC) $(STRIPFLAG) -o $@ $^ $(LIBCROSSRUN_LDFLAGS) $(LDFLAGS)
 
-#src/myapplication$(BINEXT): %$(BINEXT): %.shared.o $(SOLIBPREFIX)mylibrary$(SOEXT)
-#	$(CC) $(STRIPFLAG) -o $@ $^ $(LIBCROSSRUN_LDFLAGS) $(LDFLAGS)
+tests$(BINEXT): tests/tests.shared.o $(SOLIBPREFIX)crossrun$(SOEXT)
+	$(CC) $(STRIPFLAG) -o $@ $^ $(LIBCROSSRUN_LDFLAGS) $(LDFLAGS)
 
 .PHONY: doc
 doc:
