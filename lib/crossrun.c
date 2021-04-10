@@ -313,7 +313,6 @@ crossrun crossrun_open (const char* command, crossrunenv environment)
     return NULL;
   } else {
     //parent process
-printf("pid = %lu\n", (unsigned long)handle->pid);/////
     //close read end of standard input pipe
     close(handle->stdin_pipe[PIPE_READ]);
     //close write end of standard output pipe

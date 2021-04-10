@@ -117,6 +117,7 @@ int main (int argc, char* argv[])
     fprintf(stderr, "Error launching process\n");
     n = 0;
   } else {
+    crossrun_write(handle, "5x\n");
     sleep_milliseconds(200);
     crossrun_close(handle);
     n = crossrun_stopped(handle);
@@ -129,13 +130,14 @@ int main (int argc, char* argv[])
     crossrun_close(handle);
     crossrun_free(handle);
   }
-  test_result(index, (handle && n != 0));
+  test_result(index, (handle && n != 0 && exitcode == 0));
 
   //run test
   announce_test(++index, "Basic execute and kill");
   if ((handle = crossrun_open(test_process_path, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
   } else {
+    crossrun_write(handle, "5x\n");
     sleep_milliseconds(200);
     crossrun_kill(handle);
     n = crossrun_stopped(handle);
@@ -155,8 +157,7 @@ int main (int argc, char* argv[])
   if ((handle = crossrun_open(test_process_path, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
   } else {
-    crossrun_write(handle, "3\n");
-    crossrun_write(handle, "q\n");
+    crossrun_write(handle, "3q\n");
 printf("<");/////
     while ((n = crossrun_read_available(handle, buf, sizeof(buf))) >= 0) {
 printf(">");/////

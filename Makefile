@@ -21,8 +21,8 @@ SOLIBPREFIX = lib
 SOEXT = .so
 endif
 INCS = -Iinclude
-CFLAGS = $(INCS) -Os
-CPPFLAGS = $(INCS) -Os
+CFLAGS = $(INCS) -O3
+CPPFLAGS = $(INCS) -O3
 STATIC_CFLAGS = -DBUILD_CROSSRUN_STATIC
 SHARED_CFLAGS = -DBUILD_CROSSRUN_DLL
 LIBS =
@@ -150,7 +150,7 @@ endif
 
 .PHONY: clean
 clean:
-	$(RM) lib/*.o src/*.o *$(LIBEXT) *$(SOEXT) $(UTILS_BIN) $(TESTS_BIN) version crossrun-*.tar.xz doc/doxygen_sqlite3.db
+	$(RM) lib/*.o src/*.o test/*.o *$(LIBEXT) *$(SOEXT) $(UTILS_BIN) $(TESTS_BIN) version crossrun-*.tar.xz doc/doxygen_sqlite3.db
 ifeq ($(OS),Windows_NT)
 	$(RM) *.def
 endif
