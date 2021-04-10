@@ -10,7 +10,7 @@
 #include <unistd.h>
 //#include <fcntl.h>
 #include <errno.h>
-//#include <signal.h>
+#include <signal.h>
 //#include <sys/types.h>
 #include <sys/wait.h>
 #include <poll.h>
@@ -309,7 +309,7 @@ crossrun crossrun_open (const char* command, crossrunenv environment)
     close(handle->stderr_pipe[PIPE_WRITE]);
     close(handle->stderr_pipe[PIPE_READ]);
 #endif
-    if (execve(*argv, argv, envbuf) < 0);
+    if (execve(*argv, argv, envbuf) < 0)
       SHOWERROR("Error in executing program")
     return NULL;
   } else {
