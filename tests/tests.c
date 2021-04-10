@@ -50,8 +50,15 @@ void announce_test (int index, const char* description)
   printf("[Test %i] - %s\n", index, description);
 }
 
+static int tests_succeeded = 0;
+static int tests_failed = 0;
+
 void test_result (int index, int successcondition)
 {
+  if (successcondition)
+    tests_succeeded++;
+  else
+    tests_failed++;
   printf("Test %i: %s\n", index, (successcondition ? "PASS" : "FAIL"));
 }
 
@@ -75,16 +82,16 @@ int main (int argc, char* argv[])
   announce_test(++index, "Basic execute and check if exit code is 0");
   if ((handle = crossrun_open(test_process_path, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
-    return index;
+  } else {
+    crossrun_write(handle, "q\n");
+    while ((n = crossrun_read(handle, buf, sizeof(buf))) > 0) {
+      printf("%.*s", n, buf);
+    }
+    crossrun_wait(handle);
+    exitcode = crossrun_get_exit_code(handle);
+    crossrun_close(handle);
+    crossrun_free(handle);
   }
-  crossrun_write(handle, "q\n");
-  while ((n = crossrun_read(handle, buf, sizeof(buf))) > 0) {
-    printf("%.*s", n, buf);
-  }
-  crossrun_wait(handle);
-  exitcode = crossrun_get_exit_code(handle);
-  crossrun_close(handle);
-  crossrun_free(handle);
   test_result(index, (exitcode == 0));
 
   //run test
@@ -167,9 +174,12 @@ printf("<");/////
   }
   test_result(index, (handle && exitcode == 0));
 
+  printf("Tests succeeded:  %i\n", tests_succeeded);
+  printf("Tests failed:     %i\n", tests_failed);
+
   //clean up
   free(test_process_path);
-  return 0;
+  return tests_failed;
 
 #if 0
 #ifdef _WIN32

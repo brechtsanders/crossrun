@@ -63,7 +63,8 @@ else
 OS_LINK_FLAGS = -shared -Wl,-soname,$@ $(STRIPFLAG)
 endif
 
-UTILS_BIN = test_process$(BINEXT) tests$(BINEXT)
+TESTS_BIN = test_process$(BINEXT) tests$(BINEXT)
+UTILS_BIN = 
 
 COMMON_PACKAGE_FILES = README.md LICENSE Changelog.txt
 SOURCE_PACKAGE_FILES = $(COMMON_PACKAGE_FILES) Makefile doc/Doxyfile include/*.h lib/*.c build/*.workspace build/*.cbp build/*.depend
@@ -93,10 +94,13 @@ $(SOLIBPREFIX)crossrun$(SOEXT): $(LIBCROSSRUN_OBJ:%.o=%.shared.o)
 
 utils: $(UTILS_BIN)
 
-test_process$(BINEXT): tests/test_process.shared.o $(SOLIBPREFIX)crossrun$(SOEXT)
+tests: $(TESTS_BIN)
+	./tests$(BINEXT)
+
+test_process$(BINEXT): tests/test_process.static.o $(LIBPREFIX)crossrun$(LIBEXT)
 	$(CC) $(STRIPFLAG) -o $@ $^ $(LIBCROSSRUN_LDFLAGS) $(LDFLAGS)
 
-tests$(BINEXT): tests/tests.shared.o $(SOLIBPREFIX)crossrun$(SOEXT)
+tests$(BINEXT): tests/tests.static.o $(LIBPREFIX)crossrun$(LIBEXT)
 	$(CC) $(STRIPFLAG) -o $@ $^ $(LIBCROSSRUN_LDFLAGS) $(LDFLAGS)
 
 .PHONY: doc
@@ -143,7 +147,7 @@ endif
 
 .PHONY: clean
 clean:
-	$(RM) src/*.o *$(LIBEXT) *$(SOEXT) $(UTILS_BIN) version crossrun-*.tar.xz doc/doxygen_sqlite3.db
+	$(RM) lib/*.o src/*.o *$(LIBEXT) *$(SOEXT) $(UTILS_BIN) $(TESTS_BIN) version crossrun-*.tar.xz doc/doxygen_sqlite3.db
 ifeq ($(OS),Windows_NT)
 	$(RM) *.def
 endif
