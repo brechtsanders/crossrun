@@ -54,11 +54,11 @@ jobs:
     - if: matrix.config.build_method == 'make'
       name: Build (make)
       run: |
-        make install PREFIX=build_result DOXYGEN= CC=${{ matrix.config.cc }}
+        make CC=${{ matrix.config.cc }} DOXYGEN=
     - if: matrix.config.build_method == 'make'
       name: Test (make)
       run: |
-        make -C${{ env.MAKEDIR }} tests
+        make tests CC=${{ matrix.config.cc }}
 #    - if: matrix.config.build_method == 'make'
 #      name: Build + install (make)
 #      run: |
