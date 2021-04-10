@@ -1,10 +1,11 @@
 #ifndef __INCLUDED_CROSSRUNENVIRONMENT_H
 #define __INCLUDED_CROSSRUNENVIRONMENT_H
 
+/*! \cond PRIVATE */
 #ifdef __WIN32__
 #if defined(DLL_EXPORT) || defined(BUILD_CROSSRUN_DLL)
 #define DLL_EXPORT_CROSSRUN __declspec(dllexport)
-#elif !defined(STATIC) && !defined(BUILD_CROSSRUNSTATIC)
+#elif !defined(STATIC) && !defined(BUILD_CROSSRUN_STATIC)
 #define DLL_EXPORT_CROSSRUN __declspec(dllimport)
 #else
 #define DLL_EXPORT_CROSSRUN
@@ -12,6 +13,7 @@
 #else
 #define DLL_EXPORT_CROSSRUN
 #endif
+/*! \endcond */
 
 #ifdef __cplusplus
 extern "C" {

@@ -24,6 +24,21 @@
 #define PIPE_READ  0
 #define PIPE_WRITE 1
 
+void crossrun_get_version (int* pmajor, int* pminor, int* pmicro)
+{
+  if (pmajor)
+    *pmajor = CROSSRUN_VERSION_MAJOR;
+  if (pminor)
+    *pminor = CROSSRUN_VERSION_MINOR;
+  if (pmicro)
+    *pmicro = CROSSRUN_VERSION_MICRO;
+}
+
+const char* crossrun_get_version_string ()
+{
+  return CROSSRUN_VERSION_STRING;
+}
+
 struct crossrun_data {
 #ifdef _WIN32
   HANDLE stdin_pipe[2];           //pipe for process standard input

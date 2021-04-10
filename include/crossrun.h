@@ -3,9 +3,54 @@
 
 #include "crossrunenv.h"
 
+/*! \brief version number constants
+ * \sa     crossrun_get_version()
+ * \sa     crossrun_get_version_string()
+ * \name   CROSSRUN_VERSION_*
+ * \{
+ */
+/*! \brief major version number */
+#define CROSSRUN_VERSION_MAJOR 0
+/*! \brief minor version number */
+#define CROSSRUN_VERSION_MINOR 0
+/*! \brief micro version number */
+#define CROSSRUN_VERSION_MICRO 3
+/*! @} */
+
+/*! \brief packed version number */
+#define CROSSRUN_VERSION (CROSSRUN_VERSION_MAJOR * 0x01000000 + CROSSRUN_VERSION_MINOR * 0x00010000 + CROSSRUN_VERSION_MICRO * 0x00000100)
+
+/*! \cond PRIVATE */
+#define CROSSRUN_VERSION_STRINGIZE_(major, minor, micro) #major"."#minor"."#micro
+#define CROSSRUN_VERSION_STRINGIZE(major, minor, micro) CROSSRUN_VERSION_STRINGIZE_(major, minor, micro)
+/*! \endcond */
+
+/*! \brief string with dotted version number \hideinitializer */
+#define CROSSRUN_VERSION_STRING CROSSRUN_VERSION_STRINGIZE(CROSSRUN_VERSION_MAJOR, CROSSRUN_VERSION_MINOR, CROSSRUN_VERSION_MICRO)
+
+/*! \brief string with name of mylibrary library */
+#define CROSSRUN_NAME "crossrun"
+
+/*! \brief string with name and version of mylibrary library \hideinitializer */
+#define CROSSRUN_FULLNAME CROSSRUN_NAME " " CROSSRUN_VERSION_STRING
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/*! \brief get crossrun library version string
+ * \param  pmajor        pointer to integer that will receive major version number
+ * \param  pminor        pointer to integer that will receive minor version number
+ * \param  pmicro        pointer to integer that will receive micro version number
+ * \sa     crossrun_get_version_string()
+ */
+DLL_EXPORT_CROSSRUN void crossrun_get_version (int* pmajor, int* pminor, int* pmicro);
+
+/*! \brief get crossrun library version string
+ * \return version string
+ * \sa     crossrun_get_version()
+ */
+DLL_EXPORT_CROSSRUN const char* crossrun_get_version_string ();
 
 //!data type for handling a shell process
 typedef struct crossrun_data* crossrun;

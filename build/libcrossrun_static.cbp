@@ -89,7 +89,7 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-DSTATIC" />
+			<Add option="-DBUILD_CROSSRUN_STATIC" />
 			<Add directory="../include" />
 		</Compiler>
 		<Unit filename="../include/crossrun.h" />
