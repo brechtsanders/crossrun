@@ -38,10 +38,10 @@ jobs:
 #      uses: ilammy/msvc-dev-cmd@v1
 #      with:
 #        arch: ${{ matrix.config.arch }}
-    - if: matrix.config.configure_method != 'cmake'
-      name: Configure
-      run: |
-        echo "::set-env name=MAKEDIR::."
+#    - if: matrix.config.configure_method != 'cmake'
+#      name: Configure
+#      run: |
+#        echo "::set-env name=MAKEDIR::."
 #    - if: matrix.config.configure_method == 'cmake'
 #      name: Configure (CMake)
 #      run: |
@@ -54,10 +54,9 @@ jobs:
     - if: matrix.config.build_method == 'make'
       name: Build (make)
       run: |
-        make -C${{ env.MAKEDIR }} install PREFIX=build_result DOXYGEN= CC=${{ matrix.config.cc }}
-        echo "::set-env name=LD_LIBRARY_PATH::$(pwd)/build_result/lib:$LD_LIBRARY_PATH"
+        make install PREFIX=build_result DOXYGEN= CC=${{ matrix.config.cc }}
     - if: matrix.config.build_method == 'make'
-      name: Build (make)
+      name: Test (make)
       run: |
         make -C${{ env.MAKEDIR }} tests
 #    - if: matrix.config.build_method == 'make'
