@@ -2,10 +2,10 @@ name: GitHub-CI for crossrun C library
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
- 
+    branches: [ main ]
+
 jobs:
   build:
     name: ${{ matrix.config.name }}
