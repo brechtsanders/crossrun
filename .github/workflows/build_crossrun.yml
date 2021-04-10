@@ -38,10 +38,10 @@ jobs:
 #      uses: ilammy/msvc-dev-cmd@v1
 #      with:
 #        arch: ${{ matrix.config.arch }}
-#    - if: matrix.config.configure_method != 'cmake'
-#      name: Configure
-#      run: |
-#        echo "::set-env name=MAKEDIR::."
+    - if: matrix.config.configure_method != 'cmake'
+      name: Configure
+      run: |
+        echo "::set-env name=MAKEDIR::."
 #    - if: matrix.config.configure_method == 'cmake'
 #      name: Configure (CMake)
 #      run: |
@@ -49,13 +49,23 @@ jobs:
 #        cmake -G"${{ matrix.config.cmake_generator }}" -DCMAKE_CC_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} -DCMAKE_INSTALL_PREFIX:PATH=../build_result -DBUILD_STATIC:BOOL=ON -DBUILD_SHARED:BOOL=ON -DBUILD_UTILS:BOOL=ON -DBUILD_DOCUMENTATION:BOOL=OFF -S. -Bbuild_temp
 #        echo "::set-env name=MAKEDIR::build_temp"
     - run: |
+        ${{ matrix.config.cc }} --version
         ls -l
     - if: matrix.config.build_method == 'make'
-      name: Build + install (make)
+      name: Build (make)
       run: |
-        ${{ matrix.config.cc }} --version
         make -C${{ env.MAKEDIR }} install PREFIX=build_result DOXYGEN= CC=${{ matrix.config.cc }}
         echo "::set-env name=LD_LIBRARY_PATH::$(pwd)/build_result/lib:$LD_LIBRARY_PATH"
+    - if: matrix.config.build_method == 'make'
+      name: Build (make)
+      run: |
+        make -C${{ env.MAKEDIR }} tests
+#    - if: matrix.config.build_method == 'make'
+#      name: Build + install (make)
+#      run: |
+#        ${{ matrix.config.cc }} --version
+#        make -C${{ env.MAKEDIR }} install PREFIX=build_result DOXYGEN= CC=${{ matrix.config.cc }}
+#        echo "::set-env name=LD_LIBRARY_PATH::$(pwd)/build_result/lib:$LD_LIBRARY_PATH"
 #    - if: matrix.config.build_method == 'nmake'
 #      name: Build + install (nmake)
 #      shell: cmd
