@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1618056893 source:z:\crossrun\tests\test_process.c
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+	<unistd.h>
+	"crossrun.h"
+
+1618058088 z:\crossrun\include\crossrun.h
+	"crossrunenv.h"
+
+1618048634 z:\crossrun\include\crossrunenv.h
+
