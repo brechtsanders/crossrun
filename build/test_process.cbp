@@ -87,7 +87,7 @@
 			<Add option="-Wall" />
 			<Add directory="../include" />
 		</Compiler>
-		<Unit filename="../tests/test_process.c">
+		<Unit filename="../test/test_process.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

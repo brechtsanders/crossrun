@@ -3,8 +3,13 @@
 	<Workspace title="crossrun">
 		<Project filename="libcrossrun_static.cbp" />
 		<Project filename="libcrossrun_shared.cbp" />
-		<Project filename="test_process.cbp" />
-		<Project filename="tests.cbp" />
+		<Project filename="test_process.cbp">
+			<Depends filename="libcrossrun_shared.cbp" />
+		</Project>
+		<Project filename="run_tests.cbp">
+			<Depends filename="libcrossrun_shared.cbp" />
+			<Depends filename="test_process.cbp" />
+		</Project>
 		<Project filename="test_execshell1.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

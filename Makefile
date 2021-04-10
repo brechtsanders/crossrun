@@ -95,12 +95,15 @@ $(SOLIBPREFIX)crossrun$(SOEXT): $(LIBCROSSRUN_OBJ:%.o=%.shared.o)
 utils: $(UTILS_BIN)
 
 tests: $(TESTS_BIN)
+
+.PHONY: test
+test: tests
 	./tests$(BINEXT)
 
-test_process$(BINEXT): tests/test_process.static.o $(LIBPREFIX)crossrun$(LIBEXT)
+test_process$(BINEXT): test/test_process.static.o $(LIBPREFIX)crossrun$(LIBEXT)
 	$(CC) $(STRIPFLAG) -o $@ $^ $(LIBCROSSRUN_LDFLAGS) $(LDFLAGS)
 
-tests$(BINEXT): tests/tests.static.o $(LIBPREFIX)crossrun$(LIBEXT)
+tests$(BINEXT): test/run_tests.static.o $(LIBPREFIX)crossrun$(LIBEXT)
 	$(CC) $(STRIPFLAG) -o $@ $^ $(LIBCROSSRUN_LDFLAGS) $(LDFLAGS)
 
 .PHONY: doc
@@ -124,7 +127,6 @@ ifdef DOXYGEN
 	$(CPDIR) doc/man $(PREFIX)/
 endif
 
-.PHONY: version
 version:
 	sed -ne "s/^#define\s*CROSSRUN_VERSION_[A-Z]*\s*\([0-9]*\)\s*$$/\1./p" include/crossrun.h | tr -d "\n" | sed -e "s/\.$$//" > version
 

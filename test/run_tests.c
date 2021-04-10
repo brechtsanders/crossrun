@@ -82,6 +82,7 @@ int main (int argc, char* argv[])
   announce_test(++index, "Basic execute and check if exit code is 0");
   if ((handle = crossrun_open(test_process_path, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
+    exitcode = ~0;
   } else {
     crossrun_write(handle, "q\n");
     while ((n = crossrun_read(handle, buf, sizeof(buf))) > 0) {
@@ -92,7 +93,7 @@ int main (int argc, char* argv[])
     crossrun_close(handle);
     crossrun_free(handle);
   }
-  test_result(index, (exitcode == 0));
+  test_result(index, (handle && exitcode == 0));
 
   //run test
   announce_test(++index, "Basic execute and check if exit code is 99");
@@ -114,6 +115,7 @@ int main (int argc, char* argv[])
   announce_test(++index, "Basic execute and close");
   if ((handle = crossrun_open(test_process_path, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
+    n = 0;
   } else {
     sleep_milliseconds(200);
     crossrun_close(handle);
