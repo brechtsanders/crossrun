@@ -1,0 +1,27 @@
+# depslib dependency file v1.0
+1618047073 source:z:\crossrun\lib\crossrun.c
+	"crossrun.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<errno.h>
+	<sys/wait.h>
+	<poll.h>
+	<sys/ioctl.h>
+
+1618046773 z:\crossrun\include\crossrun.h
+	"crossrunenv.h"
+
+1618047122 z:\crossrun\include\crossrunenv.h
+
+1618046968 source:z:\crossrun\lib\crossrunenv.c
+	"crossrunenv.h"
+	<windows.h>
+	<unistd.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
