@@ -63,7 +63,7 @@ else
 OS_LINK_FLAGS = -shared -Wl,-soname,$@ $(STRIPFLAG)
 endif
 
-TESTS_BIN = test_process$(BINEXT) tests$(BINEXT)
+TESTS_BIN = test_process$(BINEXT) run_tests$(BINEXT)
 UTILS_BIN = 
 
 COMMON_PACKAGE_FILES = README.md LICENSE Changelog.txt
@@ -99,12 +99,12 @@ tests: $(TESTS_BIN)
 
 .PHONY: test
 test: tests
-	./tests$(BINEXT)
+	./run_tests$(BINEXT)
 
 test_process$(BINEXT): test/test_process.static.o $(LIBPREFIX)crossrun$(LIBEXT)
 	$(CC) $(STRIPFLAG) -o $@ $^ $(LIBCROSSRUN_LDFLAGS) $(LDFLAGS)
 
-tests$(BINEXT): test/run_tests.static.o $(LIBPREFIX)crossrun$(LIBEXT)
+run_tests$(BINEXT): test/run_tests.static.o $(LIBPREFIX)crossrun$(LIBEXT)
 	$(CC) $(STRIPFLAG) -o $@ $^ $(LIBCROSSRUN_LDFLAGS) $(LDFLAGS)
 
 .PHONY: doc

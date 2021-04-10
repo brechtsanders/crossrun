@@ -58,7 +58,7 @@ jobs:
     - if: matrix.config.build_method == 'make'
       name: Test (make)
       run: |
-        make test CC=${{ matrix.config.cc }}
+        make test CC=${{ matrix.config.cc }} V=1
 #    - if: matrix.config.build_method == 'make'
 #      name: Build + install (make)
 #      run: |
