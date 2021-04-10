@@ -32,7 +32,6 @@ jobs:
             cc: "clang", cxx: "clang++",
             configure_method: "", build_method: "make"
           }
-          }
     steps:
     - uses: actions/checkout@v1
 #    - if: matrix.config.cc == 'cl'
