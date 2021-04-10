@@ -1,0 +1,77 @@
+name: GitHub-CI for crossrun C library
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Windows 64-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
+            os: windows-latest,
+            cc: "x86_64-w64-mingw32-gcc.exe", cxx: "x86_64-w64-mingw32-g++.exe",
+            configure_method: "", build_method: "make"
+          }
+        - {
+            name: "Ubuntu GCC (make)", artifact: "linux.tar.bz2",
+            os: ubuntu-latest,
+            cc: "gcc", cxx: "g++",
+            configure_method: "", build_method: "make"
+          }
+        - {
+            name: "macOS Clang (make)", artifact: "macos.tar.bz2",
+            os: macos-latest,
+            cc: "clang", cxx: "clang++",
+            configure_method: "", build_method: "make"
+          }
+          }
+    steps:
+    - uses: actions/checkout@v1
+#    - if: matrix.config.cc == 'cl'
+#      uses: ilammy/msvc-dev-cmd@v1
+#      with:
+#        arch: ${{ matrix.config.arch }}
+#    - if: matrix.config.configure_method != 'cmake'
+#      name: Configure
+#      run: |
+#        echo "::set-env name=MAKEDIR::."
+#    - if: matrix.config.configure_method == 'cmake'
+#      name: Configure (CMake)
+#      run: |
+#        ${{ matrix.config.cc }} --version
+#        cmake -G"${{ matrix.config.cmake_generator }}" -DCMAKE_CC_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} -DCMAKE_INSTALL_PREFIX:PATH=../build_result -DBUILD_STATIC:BOOL=ON -DBUILD_SHARED:BOOL=ON -DBUILD_UTILS:BOOL=ON -DBUILD_DOCUMENTATION:BOOL=OFF -S. -Bbuild_temp
+#        echo "::set-env name=MAKEDIR::build_temp"
+    - if: matrix.config.build_method == 'make'
+      name: Build + install (make)
+      run: |
+        ${{ matrix.config.cc }} --version
+        make -C${{ env.MAKEDIR }} install PREFIX=build_result DOXYGEN= CC=${{ matrix.config.cc }}
+        echo "::set-env name=LD_LIBRARY_PATH::$(pwd)/build_result/lib:$LD_LIBRARY_PATH"
+#    - if: matrix.config.build_method == 'nmake'
+#      name: Build + install (nmake)
+#      shell: cmd
+#      run: |
+#        #cmake --build ${{ env.MAKEDIR }}
+#        #cmake --install ${{ env.MAKEDIR }}
+#        pushd ${{ env.MAKEDIR }}
+#        nmake /NOLOGO install
+#        popd
+    - name: Test
+      run: |
+        build_result/tests
+#    - name: Pack
+#      run: |
+#        tar cfj ./${{ matrix.config.artifact }} --strip-components=1 build_result
+#    - name: Upload
+#      uses: actions/upload-artifact@v1
+#      with:
+#        path: ./${{ matrix.config.artifact }}
+#        name: ${{ matrix.config.artifact }}
