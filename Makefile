@@ -94,6 +94,7 @@ $(SOLIBPREFIX)crossrun$(SOEXT): $(LIBCROSSRUN_OBJ:%.o=%.shared.o)
 
 utils: $(UTILS_BIN)
 
+.PHONY: tests
 tests: $(TESTS_BIN)
 
 .PHONY: test
