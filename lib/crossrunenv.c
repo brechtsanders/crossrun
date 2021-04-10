@@ -4,6 +4,7 @@
 #else
 #define _GNU_SOURCE
 #include <unistd.h>
+extern char **environ;
 #endif
 #include <stdio.h>
 #include <stdlib.h>

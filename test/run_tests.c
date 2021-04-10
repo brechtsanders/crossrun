@@ -169,7 +169,7 @@ printf(".");/////
       }
 printf("<");/////
     }
-    crossrun_wait(handle);
+    n = crossrun_wait(handle);
     exitcode = crossrun_get_exit_code(handle);
     crossrun_close(handle);
     crossrun_free(handle);
