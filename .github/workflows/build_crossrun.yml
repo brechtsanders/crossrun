@@ -20,12 +20,12 @@ jobs:
             cc: "x86_64-w64-mingw32-gcc.exe", cxx: "x86_64-w64-mingw32-g++.exe",
             configure_method: "", build_method: "make"
           }
-        - {
-            name: "Windows 31-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
-            os: windows-latest,
-            cc: "i686-w64-mingw32-gcc.exe", cxx: "i686-w64-mingw32-g++.exe",
-            configure_method: "", build_method: "make"
-          }
+#        - {
+#            name: "Windows 32-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
+#            os: windows-latest,
+#            cc: "i686-w64-mingw32-gcc.exe", cxx: "i686-w64-mingw32-g++.exe",
+#            configure_method: "", build_method: "make"
+#          }
         - {
             name: "Ubuntu GCC (make)", artifact: "linux.tar.bz2",
             os: ubuntu-latest,
