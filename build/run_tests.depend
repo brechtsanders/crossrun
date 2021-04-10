@@ -12,3 +12,11 @@
 
 1618048634 z:\crossrun\include\crossrunenv.h
 
+1618070163 source:z:\crossrun\test\run_tests.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<windows.h>
+	<unistd.h>
+	"crossrun.h"
+

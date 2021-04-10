@@ -17,7 +17,8 @@
 #include <sys/ioctl.h>
 #endif
 
-#define SHOWERROR(format, ...) fprintf(stderr, format "\n" __VA_OPT__(,) __VA_ARGS__);
+//#define SHOWERROR(format, ...) fprintf(stderr, format "\n" __VA_OPT__(,) __VA_ARGS__);
+#define SHOWERROR(...) fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n");
 
 //#define WITH_STDERR
 
@@ -334,6 +335,8 @@ int crossrun_stopped (crossrun handle)
   if (handle->exited)
     return 1;
 #ifdef _WIN32
+  if (handle->proc_info.hProcess == 0)
+    return 1;
   if (WaitForSingleObject(handle->proc_info.hProcess, 0) == WAIT_TIMEOUT)
     return 0;
   if (!GetExitCodeProcess(handle->proc_info.hProcess, &handle->exitcode))
@@ -358,13 +361,15 @@ int crossrun_wait (crossrun handle)
   if (!handle || handle->exited)
     return 1;
 #ifdef _WIN32
-  //if (WaitForSingleObject(handle->proc_info.hProcess, (miliseconds == 0 ? INFINITE : miliseconds)) == WAIT_TIMEOUT) {
-  if (WaitForSingleObject(handle->proc_info.hProcess, INFINITE) == WAIT_TIMEOUT) {
-    handle->exitcode = ~0;
-    return 0;
+  if (handle->proc_info.hProcess != 0) {
+    //if (WaitForSingleObject(handle->proc_info.hProcess, (miliseconds == 0 ? INFINITE : miliseconds)) == WAIT_TIMEOUT) {
+    if (WaitForSingleObject(handle->proc_info.hProcess, INFINITE) == WAIT_TIMEOUT) {
+      handle->exitcode = ~0;
+      return 0;
+    }
+    if (!GetExitCodeProcess(handle->proc_info.hProcess, &handle->exitcode))
+      handle->exitcode = ~0;
   }
-  if (!GetExitCodeProcess(handle->proc_info.hProcess, &handle->exitcode))
-    handle->exitcode = ~0;
 #else
   int status;
   if (waitpid(handle->pid, &status, WUNTRACED) == -1) {
@@ -404,7 +409,10 @@ void crossrun_close (crossrun handle)
     handle->stderr_pipe[PIPE_READ] = NULL;
   }
 #endif
-  CloseHandle(handle->proc_info.hProcess);
+  if (handle->proc_info.hProcess != 0) {
+    CloseHandle(handle->proc_info.hProcess);
+    handle->proc_info.hProcess = 0;
+  }
 #else
   if (handle->stdin_pipe[PIPE_WRITE] >= 0) {
     close(handle->stdin_pipe[PIPE_WRITE]);

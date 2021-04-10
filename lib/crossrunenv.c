@@ -9,6 +9,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(_WIN32) && !defined(__MINGW64_VERSION_MAJOR)
+#define strcasecmp stricmp
+#endif
+
 struct crossrunenv_data {
   char* variable;
   char* value;
