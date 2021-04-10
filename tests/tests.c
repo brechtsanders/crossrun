@@ -75,7 +75,7 @@ int main (int argc, char* argv[])
   announce_test(++index, "Basic execute and check if exit code is 0");
   if ((handle = crossrun_open(test_process_path, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
-    return n;
+    return index;
   }
   crossrun_write(handle, "q\n");
   while ((n = crossrun_read(handle, buf, sizeof(buf))) > 0) {
@@ -91,78 +91,81 @@ int main (int argc, char* argv[])
   announce_test(++index, "Basic execute and check if exit code is 99");
   if ((handle = crossrun_open(test_process_path, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
-    return n;
+  } else {
+    crossrun_write(handle, "x\n");
+    while ((n = crossrun_read(handle, buf, sizeof(buf))) > 0) {
+      printf("%.*s", n, buf);
+    }
+    crossrun_wait(handle);
+    exitcode = crossrun_get_exit_code(handle);
+    crossrun_close(handle);
+    crossrun_free(handle);
   }
-  crossrun_write(handle, "x\n");
-  while ((n = crossrun_read(handle, buf, sizeof(buf))) > 0) {
-    printf("%.*s", n, buf);
-  }
-  crossrun_wait(handle);
-  exitcode = crossrun_get_exit_code(handle);
-  crossrun_close(handle);
-  crossrun_free(handle);
-  test_result(index, (exitcode == 99));
+  test_result(index, (handle && exitcode == 99));
 
   //run test
   announce_test(++index, "Basic execute and close");
   if ((handle = crossrun_open(test_process_path, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
-    return n;
-  }
-  sleep_milliseconds(200);
-  crossrun_close(handle);
-  n = crossrun_stopped(handle);
-  if (!n) {
+  } else {
     sleep_milliseconds(200);
+    crossrun_close(handle);
     n = crossrun_stopped(handle);
+    if (!n) {
+      sleep_milliseconds(200);
+      n = crossrun_stopped(handle);
+    }
+    crossrun_wait(handle);
+    exitcode = crossrun_get_exit_code(handle);
+    crossrun_close(handle);
+    crossrun_free(handle);
   }
-  crossrun_wait(handle);
-  exitcode = crossrun_get_exit_code(handle);
-  crossrun_close(handle);
-  crossrun_free(handle);
-  test_result(index, (n != 0));
+  test_result(index, (handle && n != 0));
 
   //run test
   announce_test(++index, "Basic execute and kill");
   if ((handle = crossrun_open(test_process_path, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
-    return n;
-  }
-  sleep_milliseconds(200);
-  crossrun_kill(handle);
-  n = crossrun_stopped(handle);
-  if (!n) {
+  } else {
     sleep_milliseconds(200);
+    crossrun_kill(handle);
     n = crossrun_stopped(handle);
+    if (!n) {
+      sleep_milliseconds(200);
+      n = crossrun_stopped(handle);
+    }
+    crossrun_wait(handle);
+    exitcode = crossrun_get_exit_code(handle);
+    crossrun_close(handle);
+    crossrun_free(handle);
   }
-  crossrun_wait(handle);
-  exitcode = crossrun_get_exit_code(handle);
-  crossrun_close(handle);
-  crossrun_free(handle);
-  test_result(index, (n != 0));
+  test_result(index, (handle && n != 0));
 
   //run test
   announce_test(++index, "Basic execute and non-blocking read");
   if ((handle = crossrun_open(test_process_path, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
-    return n;
-  }
-  crossrun_write(handle, "3\n");
-  crossrun_write(handle, "q\n");
-  while ((n = crossrun_read_available(handle, buf, sizeof(buf))) >= 0) {
-    if (n) {
-      printf("%.*s", n, buf);
-    } else {
+  } else {
+    crossrun_write(handle, "3\n");
+    crossrun_write(handle, "q\n");
+printf("<");/////
+    while ((n = crossrun_read_available(handle, buf, sizeof(buf))) >= 0) {
+printf(">");/////
+      if (n) {
+        printf("%.*s", n, buf);
+      } else {
 printf(".");/////
-//      printf("[sleeping 500ms]\n");
-      sleep_milliseconds(100);
+//        printf("[sleeping 500ms]\n");
+        sleep_milliseconds(100);
+      }
+printf("<");/////
     }
+    crossrun_wait(handle);
+    exitcode = crossrun_get_exit_code(handle);
+    crossrun_close(handle);
+    crossrun_free(handle);
   }
-  crossrun_wait(handle);
-  exitcode = crossrun_get_exit_code(handle);
-  crossrun_close(handle);
-  crossrun_free(handle);
-  test_result(index, (exitcode == 0));
+  test_result(index, (handle && exitcode == 0));
 
   //clean up
   free(test_process_path);

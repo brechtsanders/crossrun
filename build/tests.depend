@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1618058866 source:z:\crossrun\tests\tests.c
+1618059706 source:z:\crossrun\tests\tests.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -7,7 +7,7 @@
 	<unistd.h>
 	"crossrun.h"
 
-1618058088 z:\crossrun\include\crossrun.h
+1618059423 z:\crossrun\include\crossrun.h
 	"crossrunenv.h"
 
 1618048634 z:\crossrun\include\crossrunenv.h
