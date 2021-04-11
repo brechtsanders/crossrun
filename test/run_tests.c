@@ -66,9 +66,11 @@ int main (int argc, char* argv[])
 {
   char* test_process_path;
   crossrun handle;
+  crossrunenv env;
   unsigned long exitcode;
   char buf[128];
   int n;
+  char* p;
   int index = 0;
 
   //determine path to test process to run
@@ -179,6 +181,49 @@ printf("<");/////
 
   printf("Tests succeeded:  %i\n", tests_succeeded);
   printf("Tests failed:     %i\n", tests_failed);
+
+  //run test
+  announce_test(++index, "Basic execute with unmodified system environment");
+  env = crossrunenv_create_from_system();
+  if ((handle = crossrun_open(test_process_path, env)) == NULL) {
+    fprintf(stderr, "Error launching process\n");
+    exitcode = ~0;
+  } else {
+    crossrun_write(handle, "q\n");
+    while ((n = crossrun_read(handle, buf, sizeof(buf))) > 0) {
+      printf("%.*s", n, buf);
+    }
+    crossrun_wait(handle);
+    exitcode = crossrun_get_exit_code(handle);
+    crossrun_close(handle);
+    crossrun_free(handle);
+  }
+  test_result(index, (handle != NULL && env != NULL && exitcode == 0));
+  crossrunenv_free(env);
+
+  //run test
+  announce_test(++index, "Basic execute with modified system environment");
+  env = crossrunenv_create_from_system();
+  crossrunenv_set(&env, "TEST", "TestData");
+  p = NULL;
+  if ((handle = crossrun_open(test_process_path, env)) == NULL) {
+    fprintf(stderr, "Error launching process\n");
+    exitcode = ~0;
+  } else {
+    crossrun_write(handle, "eq\n");
+    while ((n = crossrun_read(handle, buf, sizeof(buf) - 1)) > 0) {
+      buf[n] = 0;
+      if (!p)
+        p = strstr(buf, "TEST: TestData");
+      printf("[%.*s]", n, buf);
+    }
+    crossrun_wait(handle);
+    exitcode = crossrun_get_exit_code(handle);
+    crossrun_close(handle);
+    crossrun_free(handle);
+  }
+  test_result(index, (handle != NULL && env != NULL && p != NULL && exitcode == 0));
+  crossrunenv_free(env);
 
   //clean up
   free(test_process_path);

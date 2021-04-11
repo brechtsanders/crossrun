@@ -22,7 +22,7 @@
 /*! \brief minor version number */
 #define CROSSRUN_VERSION_MINOR 1
 /*! \brief micro version number */
-#define CROSSRUN_VERSION_MICRO 1
+#define CROSSRUN_VERSION_MICRO 2
 /*! @} */
 
 /*! \brief packed version number */
