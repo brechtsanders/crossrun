@@ -51,6 +51,8 @@ int get_process_priority ()
 
 #ifdef _WIN32
   switch (GetPriorityClass(GetCurrentProcess())) {
+    case 0:
+      return CROSSRUN_PRIO_ERROR;
     case IDLE_PRIORITY_CLASS:
       return CROSSRUN_PRIO_LOW;
     case BELOW_NORMAL_PRIORITY_CLASS:
@@ -62,9 +64,6 @@ int get_process_priority ()
     case HIGH_PRIORITY_CLASS:
     case REALTIME_PRIORITY_CLASS:
       return CROSSRUN_PRIO_HIGH;
-    case 0:
-    default:
-      return CROSSRUN_PRIO_ERROR;
   }
 #else
   int prio;
@@ -83,6 +82,7 @@ int get_process_priority ()
   if (prio < 0)
     return CROSSRUN_PRIO_NORMAL;
 #endif
+  return CROSSRUN_PRIO_ERROR;
 }
 
 int main (int argc, char* argv[])

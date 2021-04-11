@@ -11,10 +11,13 @@
 
 1618142792 z:\crossrun\include\crossrunenv.h
 
-1618168441 source:z:\crossrun\test\test_process.c
+1618170546 source:z:\crossrun\test\test_process.c
 	<stdio.h>
 	<stdlib.h>
 	<windows.h>
 	<unistd.h>
+	<sys/resource.h>
+	<limits.h>
+	<errno.h>
 	"crossrun.h"
 

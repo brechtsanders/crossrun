@@ -15,15 +15,21 @@ jobs:
       matrix:
         config:
         - {
+            name: "Windows 32-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
+            os: windows-latest,
+            cc: "i686-w64-mingw32-gcc.exe", cxx: "i686-w64-mingw32-g++.exe",
+            configure_method: "", build_method: "make"
+          }
+        - {
             name: "Windows 64-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
             os: windows-latest,
             cc: "x86_64-w64-mingw32-gcc.exe", cxx: "x86_64-w64-mingw32-g++.exe",
             configure_method: "", build_method: "make"
           }
         - {
-            name: "Windows 32-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
-            os: windows-latest,
-            cc: "i686-w64-mingw32-gcc.exe", cxx: "i686-w64-mingw32-g++.exe",
+            name: "macOS Clang (make)", artifact: "macos.tar.bz2",
+            os: macos-latest,
+            cc: "clang", cxx: "clang++",
             configure_method: "", build_method: "make"
           }
         - {
@@ -35,12 +41,6 @@ jobs:
         - {
             name: "Ubuntu Clang (make)", artifact: "linux.tar.bz2",
             os: ubuntu-latest,
-            cc: "clang", cxx: "clang++",
-            configure_method: "", build_method: "make"
-          }
-        - {
-            name: "macOS Clang (make)", artifact: "macos.tar.bz2",
-            os: macos-latest,
             cc: "clang", cxx: "clang++",
             configure_method: "", build_method: "make"
           }
