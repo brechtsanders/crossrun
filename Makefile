@@ -32,6 +32,11 @@ STRIPFLAG =
 else
 STRIPFLAG = -s
 endif
+ifdef DEBUG
+CFLAGS += -g
+CPPFLAGS += -g
+STRIPFLAG =
+endif
 MKDIR = mkdir -p
 RM = rm -f
 RMDIR = rm -rf

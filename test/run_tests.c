@@ -93,7 +93,7 @@ int main (int argc, char* argv[])
     crossrun_close(handle);
     crossrun_free(handle);
   }
-  test_result(index, (handle && exitcode == 0));
+  test_result(index, (handle != NULL && exitcode == 0));
 
   //run test
   announce_test(++index, "Basic execute and check if exit code is 99");
@@ -109,7 +109,7 @@ int main (int argc, char* argv[])
     crossrun_close(handle);
     crossrun_free(handle);
   }
-  test_result(index, (handle && exitcode == 99));
+  test_result(index, (handle != NULL && exitcode == 99));
 
   //run test
   announce_test(++index, "Basic execute and close");
@@ -130,7 +130,7 @@ int main (int argc, char* argv[])
     crossrun_close(handle);
     crossrun_free(handle);
   }
-  test_result(index, (handle && n != 0 && exitcode == 0));
+  test_result(index, (handle != NULL && n != 0 && exitcode == 0));
 
   //run test
   announce_test(++index, "Basic execute and kill");
@@ -150,7 +150,7 @@ int main (int argc, char* argv[])
     crossrun_close(handle);
     crossrun_free(handle);
   }
-  test_result(index, (handle && n != 0));
+  test_result(index, (handle != NULL && n != 0));
 
   //run test
   announce_test(++index, "Basic execute and non-blocking read");
@@ -175,7 +175,7 @@ printf("<");/////
     crossrun_free(handle);
     printf("exitcode: %lu\n", exitcode);
   }
-  test_result(index, (handle /*&& exitcode == 0*/));
+  test_result(index, (handle != NULL /*&& exitcode == 0*/));
 
   printf("Tests succeeded:  %i\n", tests_succeeded);
   printf("Tests failed:     %i\n", tests_failed);
