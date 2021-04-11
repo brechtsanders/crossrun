@@ -86,7 +86,7 @@ int main (int argc, char* argv[])
     fprintf(stderr, "Error launching process\n");
     exitcode = ~0;
   } else {
-    crossrun_write(handle, "q\n");
+    crossrun_write(handle, "pq\n");
     while ((n = crossrun_read(handle, buf, sizeof(buf))) > 0) {
       printf("%.*s", n, buf);
     }
