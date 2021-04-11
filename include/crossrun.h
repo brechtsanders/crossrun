@@ -21,9 +21,9 @@
 /*! \brief major version number */
 #define CROSSRUN_VERSION_MAJOR 0
 /*! \brief minor version number */
-#define CROSSRUN_VERSION_MINOR 1
+#define CROSSRUN_VERSION_MINOR 2
 /*! \brief micro version number */
-#define CROSSRUN_VERSION_MICRO 2
+#define CROSSRUN_VERSION_MICRO 0
 /*! @} */
 
 /*! \brief packed version number */

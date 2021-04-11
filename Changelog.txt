@@ -1,7 +1,8 @@
-0.1.2
+0.2.0
 
 2021-04-11  Brecht Sanders  https://github.com/brechtsanders/
 
+  * added priority parameter to crossrun_open()
   * added test for custom environment variable
 
 0.1.1
