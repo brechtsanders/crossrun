@@ -20,12 +20,12 @@ struct crossrunenv_data {
   struct crossrunenv_data* next;
 };
 
-crossrunenv crossrunenv_create_empty ()
+DLL_EXPORT_CROSSRUN crossrunenv crossrunenv_create_empty ()
 {
   return NULL;
 }
 
-crossrunenv crossrunenv_create_from_system ()
+DLL_EXPORT_CROSSRUN crossrunenv crossrunenv_create_from_system ()
 {
   struct crossrunenv_data* result = NULL;
 #ifdef _WIN32
@@ -75,7 +75,7 @@ crossrunenv crossrunenv_create_from_system ()
   return result;
 }
 
-void crossrunenv_free (crossrunenv environment)
+DLL_EXPORT_CROSSRUN void crossrunenv_free (crossrunenv environment)
 {
   struct crossrunenv_data* next;
   //free the environment chain
@@ -88,7 +88,7 @@ void crossrunenv_free (crossrunenv environment)
   }
 }
 
-void crossrunenv_set (crossrunenv* environment, const char* variable, const char* value)
+DLL_EXPORT_CROSSRUN void crossrunenv_set (crossrunenv* environment, const char* variable, const char* value)
 {
   struct crossrunenv_data** current = environment;
   //find insert position
@@ -122,7 +122,7 @@ void crossrunenv_set (crossrunenv* environment, const char* variable, const char
   (*current)->value = strdup(value);
 }
 
-const char* crossrunenv_get (crossrunenv environment, const char* variable)
+DLL_EXPORT_CROSSRUN const char* crossrunenv_get (crossrunenv environment, const char* variable)
 {
   struct crossrunenv_data* current = environment;
   while (current) {
@@ -134,9 +134,9 @@ const char* crossrunenv_get (crossrunenv environment, const char* variable)
 }
 
 #ifdef _WIN32
-char* crossrunenv_generate (crossrunenv environment)
+DLL_EXPORT_CROSSRUN char* crossrunenv_generate (crossrunenv environment)
 #else
-char** crossrunenv_generate (crossrunenv environment)
+DLL_EXPORT_CROSSRUN char** crossrunenv_generate (crossrunenv environment)
 #endif
 {
 #ifdef _WIN32

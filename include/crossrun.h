@@ -10,6 +10,7 @@
 #define __INCLUDED_CROSSRUN_H
 
 #include "crossrunenv.h"
+#include "crossrunprio.h"
 
 /*! \brief version number constants
  * \sa     crossrun_get_version()

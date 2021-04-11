@@ -53,7 +53,7 @@ OSALIAS := win32
 endif
 endif
 
-LIBCROSSRUN_OBJ = lib/crossrun.o lib/crossrunenv.o
+LIBCROSSRUN_OBJ = lib/crossrun.o lib/crossrunenv.o lib/crossrunprio.o
 LIBCROSSRUN_LDFLAGS = 
 LIBCROSSRUN_SHARED_LDFLAGS =
 ifneq ($(OS),Windows_NT)

@@ -25,7 +25,7 @@
 #define PIPE_READ  0
 #define PIPE_WRITE 1
 
-void crossrun_get_version (int* pmajor, int* pminor, int* pmicro)
+DLL_EXPORT_CROSSRUN void crossrun_get_version (int* pmajor, int* pminor, int* pmicro)
 {
   if (pmajor)
     *pmajor = CROSSRUN_VERSION_MAJOR;
@@ -35,7 +35,7 @@ void crossrun_get_version (int* pmajor, int* pminor, int* pmicro)
     *pmicro = CROSSRUN_VERSION_MICRO;
 }
 
-const char* crossrun_get_version_string ()
+DLL_EXPORT_CROSSRUN const char* crossrun_get_version_string ()
 {
   return CROSSRUN_VERSION_STRING;
 }
@@ -137,7 +137,7 @@ void free_argv (char** argv)
 }
 #endif
 
-crossrun crossrun_open (const char* command, crossrunenv environment)
+DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv environment)
 {
   crossrun handle;
   //allocate data structure
@@ -330,7 +330,7 @@ crossrun crossrun_open (const char* command, crossrunenv environment)
   return handle;
 }
 
-int crossrun_stopped (crossrun handle)
+DLL_EXPORT_CROSSRUN int crossrun_stopped (crossrun handle)
 {
   if (handle->exited)
     return 1;
@@ -356,7 +356,7 @@ int crossrun_stopped (crossrun handle)
   return 1;
 }
 
-int crossrun_wait (crossrun handle)
+DLL_EXPORT_CROSSRUN int crossrun_wait (crossrun handle)
 {
   if (!handle || handle->exited)
     return 1;
@@ -385,14 +385,14 @@ int crossrun_wait (crossrun handle)
   return 1;
 }
 
-unsigned long crossrun_get_exit_code (crossrun handle)
+DLL_EXPORT_CROSSRUN unsigned long crossrun_get_exit_code (crossrun handle)
 {
   if (!handle->exited)
     crossrun_wait(handle);
   return (unsigned long)handle->exitcode;
 }
 
-void crossrun_close (crossrun handle)
+DLL_EXPORT_CROSSRUN void crossrun_close (crossrun handle)
 {
 #ifdef _WIN32
   if (handle->stdin_pipe[PIPE_WRITE]) {
@@ -432,7 +432,7 @@ void crossrun_close (crossrun handle)
 #endif
 }
 
-void crossrun_kill (crossrun handle)
+DLL_EXPORT_CROSSRUN void crossrun_kill (crossrun handle)
 {
 #ifdef _WIN32
   TerminateProcess(handle->proc_info.hProcess, 256);
@@ -441,7 +441,7 @@ void crossrun_kill (crossrun handle)
 #endif
 }
 
-void crossrun_free (crossrun handle)
+DLL_EXPORT_CROSSRUN void crossrun_free (crossrun handle)
 {
   if (!handle)
     return;
@@ -449,7 +449,7 @@ void crossrun_free (crossrun handle)
   free(handle);
 }
 
-int crossrun_data_waiting (crossrun handle)
+DLL_EXPORT_CROSSRUN int crossrun_data_waiting (crossrun handle)
 {
 #ifdef _WIN32
   DWORD n = 0;
@@ -501,7 +501,7 @@ int crossrun_data_waiting (crossrun handle)
 #endif
 }
 
-int crossrun_read (crossrun handle, char* buf, int buflen)
+DLL_EXPORT_CROSSRUN int crossrun_read (crossrun handle, char* buf, int buflen)
 {
 #ifdef _WIN32
   DWORD n;
@@ -518,7 +518,7 @@ int crossrun_read (crossrun handle, char* buf, int buflen)
 #endif
 }
 
-int crossrun_read_available (crossrun handle, char* buf, int buflen)
+DLL_EXPORT_CROSSRUN int crossrun_read_available (crossrun handle, char* buf, int buflen)
 {
   int n;
   int bufpos = 0;
@@ -584,7 +584,7 @@ int crossrun_read_available (crossrun handle, char* buf, int buflen)
 */
 }
 
-int crossrun_writedata (crossrun handle, const char* data, int datalen)
+DLL_EXPORT_CROSSRUN int crossrun_writedata (crossrun handle, const char* data, int datalen)
 {
 #ifdef _WIN32
   if (!handle->stdin_pipe[PIPE_WRITE])
@@ -612,12 +612,12 @@ int crossrun_writedata (crossrun handle, const char* data, int datalen)
   return 0;
 }
 
-int crossrun_write (crossrun handle, const char* data)
+DLL_EXPORT_CROSSRUN int crossrun_write (crossrun handle, const char* data)
 {
   return crossrun_writedata(handle, data, strlen(data));
 }
 
-void crossrun_write_eof (crossrun handle)
+DLL_EXPORT_CROSSRUN void crossrun_write_eof (crossrun handle)
 {
 #ifdef _WIN32
   CloseHandle(handle->stdin_pipe[PIPE_WRITE]);

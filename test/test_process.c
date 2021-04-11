@@ -5,10 +5,10 @@
 #else
 #include <unistd.h>
 //#include <sys/time.h>
-#include <sys/resource.h>
-#define __USE_XOPEN
-#include <limits.h>
-#include <errno.h>
+//#include <sys/resource.h>
+//#define __USE_XOPEN
+//#include <limits.h>
+//#include <errno.h>
 #endif
 #include "crossrun.h"
 
@@ -28,61 +28,6 @@ void show_help ()
     "  x       exit with exit code 99\n"
     "  q       quit normally\n"
   );
-}
-
-#define CROSSRUN_PRIO_ERROR             0
-#define CROSSRUN_PRIO_LOW               1
-#define CROSSRUN_PRIO_BELOW_NORMAL      2
-#define CROSSRUN_PRIO_NORMAL            3
-#define CROSSRUN_PRIO_ABOVE_NORMAL      4
-#define CROSSRUN_PRIO_HIGH              5
-
-const char* cross_run_prio_name[] = {
-  "ERROR",
-  "low",
-  "below normal",
-  "normal",
-  "above normal",
-  "high"
-};
-
-int get_process_priority ()
-{
-
-#ifdef _WIN32
-  switch (GetPriorityClass(GetCurrentProcess())) {
-    case 0:
-      return CROSSRUN_PRIO_ERROR;
-    case IDLE_PRIORITY_CLASS:
-      return CROSSRUN_PRIO_LOW;
-    case BELOW_NORMAL_PRIORITY_CLASS:
-      return CROSSRUN_PRIO_BELOW_NORMAL;
-    case NORMAL_PRIORITY_CLASS:
-      return CROSSRUN_PRIO_NORMAL;
-    case ABOVE_NORMAL_PRIORITY_CLASS:
-      return CROSSRUN_PRIO_NORMAL;
-    case HIGH_PRIORITY_CLASS:
-    case REALTIME_PRIORITY_CLASS:
-      return CROSSRUN_PRIO_HIGH;
-  }
-#else
-  int prio;
-  errno = 0;
-  prio = getpriority(PRIO_PROCESS, 0);
-  if ((prio == -1 && errno != 0) || prio < -NZERO || prio >= NZERO)
-    return CROSSRUN_PRIO_ERROR;
-  if (prio == NZERO - 1)
-    return CROSSRUN_PRIO_LOW;
-  if (prio == 0)
-    return CROSSRUN_PRIO_NORMAL;
-  if (prio == -NZERO)
-    return CROSSRUN_PRIO_HIGH;
-  if (prio > 0)
-    return CROSSRUN_PRIO_BELOW_NORMAL;
-  if (prio < 0)
-    return CROSSRUN_PRIO_NORMAL;
-#endif
-  return CROSSRUN_PRIO_ERROR;
 }
 
 int main (int argc, char* argv[])
@@ -112,7 +57,7 @@ int main (int argc, char* argv[])
         printf("Value of environment variable TEST: %s\n", (s ? s : "(not set)"));
         break;
       case 'p':
-        printf("Priority: %s\n", cross_run_prio_name[get_process_priority()]);
+        printf("Priority: %s\n", crossrun_prio_name[crossrun_get_current_prio()]);
         break;
       case 'x':
         printf("Exiting with exit code 99\n");
