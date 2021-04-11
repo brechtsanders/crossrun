@@ -17,6 +17,26 @@ DLL_EXPORT_CROSSRUN const char* crossrun_prio_name[] = {
   "high"
 };
 
+#ifdef _WIN32
+DLL_EXPORT_CROSSRUN DWORD crossrun_prio_os_value[] = {
+  0,
+  IDLE_PRIORITY_CLASS,
+  BELOW_NORMAL_PRIORITY_CLASS,
+  NORMAL_PRIORITY_CLASS,
+  ABOVE_NORMAL_PRIORITY_CLASS,
+  HIGH_PRIORITY_CLASS
+};
+#else
+DLL_EXPORT_CROSSRUN int crossrun_prio_os_value[] = {
+  0,
+  NZERO - 1,
+  NZERO / 2 - 1,
+  0,
+  -(NZERO / 2),
+  -NZERO
+};
+#endif
+
 DLL_EXPORT_CROSSRUN int crossrun_get_current_prio ()
 {
 #ifdef _WIN32

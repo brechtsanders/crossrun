@@ -15,6 +15,8 @@
 #include <sys/wait.h>
 #include <poll.h>
 #include <sys/ioctl.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 #endif
 
 //#define SHOWERROR(format, ...) fprintf(stderr, format "\n" __VA_OPT__(,) __VA_ARGS__);
@@ -137,7 +139,7 @@ void free_argv (char** argv)
 }
 #endif
 
-DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv environment)
+DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv environment, int priority)
 {
   crossrun handle;
   //allocate data structure
@@ -219,7 +221,7 @@ DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv env
 #else
   startupinfo.hStdError = handle->stdout_pipe[PIPE_WRITE];
 #endif
-  if (!CreateProcessA(NULL, cmd, NULL, NULL, TRUE, /*NORMAL_PRIORITY_CLASS*/ /*BELOW_NORMAL_PRIORITY_CLASS*/ IDLE_PRIORITY_CLASS /*| CREATE_NEW_CONSOLE*/ | CREATE_NO_WINDOW, envbuf, NULL, &startupinfo, &handle->proc_info)) {
+  if (!CreateProcessA(NULL, cmd, NULL, NULL, TRUE, (priority > 0 && priority <= CROSSRUN_PRIO_HIGH ? crossrun_prio_os_value[priority] : 0) /*| CREATE_NEW_CONSOLE*/ | CREATE_NO_WINDOW, envbuf, NULL, &startupinfo, &handle->proc_info)) {
     SHOWERROR("Error in CreateProcess()")
     CloseHandle(handle->stdin_pipe[PIPE_READ]);
     CloseHandle(handle->stdin_pipe[PIPE_WRITE]);
@@ -292,6 +294,9 @@ DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv env
     return NULL;
   } else if (handle->pid == 0) {
     //child process
+    //set requested priority
+    if (priority > 0 && priority <= CROSSRUN_PRIO_HIGH)
+      setpriority(PRIO_PROCESS, 0, crossrun_prio_os_value[priority]);
     //reroute standard input to read end of pipe (use loop to cover possibility of being interrupted by signal) and close other end of pipe
     while ((dup2(handle->stdin_pipe[PIPE_READ], STDIN_FILENO) == -1) && (errno == EINTR))
       ;

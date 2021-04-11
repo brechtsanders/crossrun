@@ -67,12 +67,15 @@ typedef struct crossrun_data* crossrun;
 
 /*! \brief open a shell process
  * \param  command     shell command to execute
+ * \param  environment environment variables (NULL to inherit)
+ * \param  priority    desired process priority value as CROSSRUN_PRIO_* (note that most operating systems only allow current or lower priority)
  * \return shell process handle or NULL on error
  * \sa     crossrunenv
+ * \sa     CROSSRUN_PRIO_*
  * \sa     crossrun_open()
  * \sa     crossrun_free()
  */
-DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv environment);
+DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv environment, int priority);
 
 /*! \brief check if shell process finished
  * \param  handle      shell process handle

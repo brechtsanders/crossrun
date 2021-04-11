@@ -10,6 +10,10 @@
 #define __INCLUDED_CROSSRUNPRIORITY_H
 
 #include "crossrunenv.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 
 /*! \brief version number constants
  * \sa     crossrun_open()
@@ -38,11 +42,22 @@ extern "C" {
 /*! \brief text descriptions of the different CROSSRUN_PRIO_* priority levels
  * \sa     CROSSRUN_PRIO_*
  * \sa     crossrun_get_current_prio()
+ * \sa     crossrun_open()
  */
 DLL_EXPORT_CROSSRUN extern const char* crossrun_prio_name[];
 
+/*! \brief operating specific value representing the different CROSSRUN_PRIO_* priority levels
+ * \sa     CROSSRUN_PRIO_*
+ * \sa     crossrun_open()
+ */
+#ifdef _WIN32
+DLL_EXPORT_CROSSRUN extern DWORD crossrun_prio_os_value[];
+#else
+DLL_EXPORT_CROSSRUN extern int crossrun_prio_os_value[];
+#endif
+
 /*! \brief get priority of current process
- * \return priority value as CROSSRUN_PRIO_*
+ * \return process priority value as CROSSRUN_PRIO_*
  * \sa     CROSSRUN_PRIO_*
  * \sa     crossrun_get_current_prio()
  */
