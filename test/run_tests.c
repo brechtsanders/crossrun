@@ -81,7 +81,7 @@ int main (int argc, char* argv[])
   printf("Test process: %s\n", test_process_path);
 
   //run test
-  announce_test(++index, "Basic execute and check if exit code is 0");
+  announce_test(++index, "Execute and check if exit code is 0");
   if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_BELOW_NORMAL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
     exitcode = ~0;
@@ -98,7 +98,7 @@ int main (int argc, char* argv[])
   test_result(index, (handle != NULL && exitcode == 0));
 
   //run test
-  announce_test(++index, "Basic execute and check if exit code is 99");
+  announce_test(++index, "Execute and check if exit code is 99");
   if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
   } else {
@@ -114,7 +114,7 @@ int main (int argc, char* argv[])
   test_result(index, (handle != NULL && exitcode == 99));
 
   //run test
-  announce_test(++index, "Basic execute and close");
+  announce_test(++index, "Execute and close");
   if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
     n = 0;
@@ -135,7 +135,7 @@ int main (int argc, char* argv[])
   test_result(index, (handle != NULL && n != 0 && exitcode == 0));
 
   //run test
-  announce_test(++index, "Basic execute and kill");
+  announce_test(++index, "Execute and kill");
   if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
   } else {
@@ -155,7 +155,7 @@ int main (int argc, char* argv[])
   test_result(index, (handle != NULL && n != 0));
 
   //run test
-  announce_test(++index, "Basic execute and non-blocking read");
+  announce_test(++index, "Execute and non-blocking read");
   if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
   } else {
@@ -183,7 +183,7 @@ printf("<");/////
   printf("Tests failed:     %i\n", tests_failed);
 
   //run test
-  announce_test(++index, "Basic execute with unmodified system environment");
+  announce_test(++index, "Execute with unmodified system environment");
   env = crossrunenv_create_from_system();
   if ((handle = crossrun_open(test_process_path, env, CROSSRUN_PRIO_NORMAL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
@@ -202,7 +202,7 @@ printf("<");/////
   crossrunenv_free(env);
 
   //run test
-  announce_test(++index, "Basic execute with modified system environment");
+  announce_test(++index, "Execute with modified system environment");
   env = crossrunenv_create_from_system();
   crossrunenv_set(&env, "TEST", "TestData");
   p = NULL;
@@ -224,6 +224,35 @@ printf("<");/////
   }
   test_result(index, (handle != NULL && env != NULL && p != NULL && exitcode == 0));
   crossrunenv_free(env);
+
+/*
+  //run test
+  announce_test(++index, "Execute and send large block of input");
+  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_BELOW_NORMAL)) == NULL) {
+    fprintf(stderr, "Error launching process\n");
+    exitcode = ~0;
+  } else {
+    char* buf;
+    size_t buflen = 128 * 1024;
+    if ((buf = (char*)malloc(buflen)) == NULL) {
+      exitcode = ~0;
+      crossrun_kill(handle);
+      crossrun_wait(handle);
+    } else {
+      memset(buf, 'i', buflen);
+      crossrun_writedata(handle, buf, buflen);
+      crossrun_write(handle, "q\n");
+      while ((n = crossrun_read(handle, buf, sizeof(buf))) > 0) {
+        printf("%.*s", n, buf);
+      }
+      crossrun_wait(handle);
+      exitcode = crossrun_get_exit_code(handle);
+      crossrun_close(handle);
+    }
+    crossrun_free(handle);
+  }
+  test_result(index, (handle != NULL && exitcode == 0));
+*/
 
   //clean up
   free(test_process_path);

@@ -63,6 +63,11 @@ DLL_EXPORT_CROSSRUN extern int crossrun_prio_os_value[];
  */
 DLL_EXPORT_CROSSRUN int crossrun_get_current_prio ();
 
+/*! \brief get current process ID
+ * \return process ID of current process
+ */
+DLL_EXPORT_CROSSRUN unsigned long crossrun_get_current_process_id ();
+
 #ifdef __cplusplus
 }
 #endif

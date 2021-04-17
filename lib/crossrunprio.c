@@ -6,6 +6,8 @@
 #define __USE_XOPEN
 #include <limits.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <unistd.h>
 #endif
 
 DLL_EXPORT_CROSSRUN const char* crossrun_prio_name[] = {
@@ -75,3 +77,12 @@ DLL_EXPORT_CROSSRUN int crossrun_get_current_prio ()
   return CROSSRUN_PRIO_ERROR;
 }
 
+
+DLL_EXPORT_CROSSRUN unsigned long crossrun_get_current_process_id ()
+{
+#ifdef _WIN32
+  return GetCurrentProcessId();
+#else
+  return getpid();
+#endif
+}

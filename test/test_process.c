@@ -19,6 +19,7 @@ void show_help ()
     "  h       show help\n"
     "  [1-9]   sleep specified number of seconds\n"
     "  e       show value environment variable TEST\n"
+    "  i       show process ID\n"
     "  p       show process priority\n"
     "  x       exit with exit code 99\n"
     "  q       quit normally\n"
@@ -50,6 +51,9 @@ int main (int argc, char* argv[])
       case 'e':
         s = getenv("TEST");
         printf("Value of environment variable TEST: %s\n", (s ? s : "(not set)"));
+        break;
+      case 'i':
+        printf("PID: %lu\n", crossrun_get_current_process_id());
         break;
       case 'p':
         printf("Priority: %s\n", crossrun_prio_name[crossrun_get_current_prio()]);
