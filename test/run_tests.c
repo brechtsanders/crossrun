@@ -62,6 +62,12 @@ void test_result (int index, int successcondition)
   printf("Test %i: %s\n", index, (successcondition ? "PASS" : "FAIL"));
 }
 
+int read_data (const char* data, size_t datalen, void* callbackdata)
+{
+  printf("%.*s", (int)datalen, data);
+  return 0;
+}
+
 int main (int argc, char* argv[])
 {
   char* test_process_path;
@@ -86,7 +92,8 @@ int main (int argc, char* argv[])
     fprintf(stderr, "Error launching process\n");
     exitcode = ~0;
   } else {
-    crossrun_write(handle, "pq\n");
+    printf("started PID %lu\n", crossrun_get_pid(handle));
+    crossrun_write(handle, "ipq\n");
     while ((n = crossrun_read(handle, buf, sizeof(buf))) > 0) {
       printf("%.*s", n, buf);
     }

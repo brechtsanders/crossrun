@@ -6,8 +6,8 @@
  * This header file defines the functions for managing environment variables used by the crossrun library
  */
 
-#ifndef __INCLUDED_CROSSRUNENVIRONMENT_H
-#define __INCLUDED_CROSSRUNENVIRONMENT_H
+#ifndef __INCLUDED_CROSSRUNENV_H
+#define __INCLUDED_CROSSRUNENV_H
 
 /*! \cond PRIVATE */
 #ifdef __WIN32__
@@ -120,4 +120,4 @@ DLL_EXPORT_CROSSRUN int crossrunenv_iterate (crossrunenv environment, crossrunen
 }
 #endif
 
-#endif //__INCLUDED_CROSSRUNENVIRONMENT_H
+#endif //__INCLUDED_CROSSRUNENV_H

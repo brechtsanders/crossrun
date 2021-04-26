@@ -335,6 +335,17 @@ DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv env
   return handle;
 }
 
+DLL_EXPORT_CROSSRUN unsigned long crossrun_get_pid (crossrun handle)
+{
+  if (!handle)
+    return 0;
+#ifdef _WIN32
+  return handle->proc_info.dwProcessId;
+#else
+  return handle->pid;
+#endif
+}
+
 DLL_EXPORT_CROSSRUN int crossrun_stopped (crossrun handle)
 {
   if (handle->exited)
@@ -632,5 +643,104 @@ DLL_EXPORT_CROSSRUN void crossrun_write_eof (crossrun handle)
   handle->stdin_pipe[PIPE_WRITE] = -1;
 #endif
 }
+
+
+
+#ifdef ___EXPERIMENTAL___
+
+typedef int (*crossrun_read_callback_fn)(const char* data, size_t datalen, void* callbackdata);
+
+DLL_EXPORT_CROSSRUN int crossrun_read_write (crossrun handle, crossrun_read_callback_fn readfn, void* readcallbackdata, const char* writedata, size_t writedatalen);
+
+DLL_EXPORT_CROSSRUN int crossrun_read_write (crossrun handle, crossrun_read_callback_fn readfn, void* readcallbackdata, const char* writedata, size_t writedatalen)
+{
+#ifdef _WIN32
+#ifdef WITH_STDERR
+  HANDLE handles[2];
+#else
+  HANDLE handles[3];
+#endif
+  DWORD i;
+  DWORD result;
+  DWORD handlescount;
+  size_t writedatapos = 0;
+  size_t writedataleft = writedatalen;
+  //set handles to wait for
+  handlescount = 0;
+  if (writedataleft && handle->stdin_pipe[PIPE_WRITE])
+    handles[handlescount++] = handle->stdin_pipe[PIPE_WRITE];
+#ifdef WITH_STDERR
+  if (handle->stderr_pipe[PIPE_READ] && handle->stderr_pipe[PIPE_READ] != handle->stdout_pipe[PIPE_READ])
+    handles[handlescount++] = handle->stderr_pipe[PIPE_READ];
+#endif
+  if (handle->stdout_pipe[PIPE_READ])
+    handles[handlescount++] = handle->stdout_pipe[PIPE_READ];
+  //abort if no more open handles to wait for
+  if (handlescount == 0)
+    return -1;
+  //loop
+  while (writedataleft > 0 || writedatalen == 0) {
+    //wait for handles
+    if ((result = WaitForMultipleObjects(handlescount, handles, FALSE, INFINITE)) == WAIT_FAILED)
+      return -1;
+    if (result == WAIT_TIMEOUT)
+      return 0;
+    for (i = 0; i < handlescount; i++) {
+      if (result - WAIT_ABANDONED_0 == i) {
+        fprintf(stderr, "Handle abandoned\n");
+        return -1;
+      }
+      if (result - WAIT_OBJECT_0 == i) {
+        if (handles[i] == handle->stdout_pipe[PIPE_READ]) {
+          char readbuf[1024];
+          DWORD n;
+          n = 0;
+          if (!PeekNamedPipe(handle->stdout_pipe[PIPE_READ], NULL, 0, NULL, &n, NULL))
+            return -1;
+          if (n == 0)
+            break;
+          if (!ReadFile(handle->stdout_pipe[PIPE_READ], readbuf, (n <= sizeof(readbuf) ? n : sizeof(readbuf)), &n, NULL)) {
+            fprintf(stderr, "ReadFile() failed after WaitForMultipleObjects()\n");
+            /////TO DO: close handle
+            return -1;
+          }
+          if (readfn)
+            (*readfn)(readbuf, n, readcallbackdata);
+          break;
+        }
+#ifdef WITH_STDERR
+        if (handles[i] == handle->stderr_pipe[PIPE_READ]) {
+
+          break;
+        }
+#endif
+        if (handles[i] == handle->stdin_pipe[PIPE_WRITE]) {
+          if (writedataleft) {
+            DWORD n;
+            if (!WriteFile(handle->stdin_pipe[PIPE_WRITE], writedata + writedatapos, writedataleft, &n, NULL)) {
+            //if (!WriteFile(handle->stdin_pipe[PIPE_WRITE], writedata + writedatapos, (writedataleft > 1024 ? 1024 : writedataleft), &n, NULL)) {
+              fprintf(stderr, "WriteFile() failed after WaitForMultipleObjects()\n");
+              /////TO DO: close handle
+              return -1;
+            }
+            writedatapos += n;
+            if ((writedataleft -= n) == 0)
+              return 0;
+          }
+          break;
+        }
+        break;
+      }
+    }
+  }
+#else
+#endif
+  return -1;
+}
+
+#endif // ___EXPERIMENTAL___
+
+/////See also: https://docs.microsoft.com/en-us/windows/win32/ipc/synchronous-and-overlapped-input-and-output?redirectedfrom=MSDN
+
 
 /////See also: https://docs.microsoft.com/en-us/windows/win32/ProcThread/creating-a-child-process-with-redirected-input-and-output

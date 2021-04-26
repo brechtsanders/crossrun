@@ -1,13 +1,13 @@
 /**
- * @file crossrunprio.h
+ * @file crossrunproc.h
  * @brief crossrun library header file with process priority definitions and functions
  * @author Brecht Sanders
  *
  * This header file defines the definitions and functions for managing process priority used by the crossrun library
  */
 
-#ifndef __INCLUDED_CROSSRUNPRIORITY_H
-#define __INCLUDED_CROSSRUNPRIORITY_H
+#ifndef __INCLUDED_CROSSRUNPROC_H
+#define __INCLUDED_CROSSRUNPROC_H
 
 #include "crossrunenv.h"
 #ifdef _WIN32
@@ -66,10 +66,10 @@ DLL_EXPORT_CROSSRUN int crossrun_get_current_prio ();
 /*! \brief get current process ID
  * \return process ID of current process
  */
-DLL_EXPORT_CROSSRUN unsigned long crossrun_get_current_process_id ();
+DLL_EXPORT_CROSSRUN unsigned long crossrun_get_current_pid ();
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //__INCLUDED_CROSSRUNPRIORITY_H
+#endif //__INCLUDED_CROSSRUNPROC_H

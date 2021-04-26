@@ -10,7 +10,7 @@
 #define __INCLUDED_CROSSRUN_H
 
 #include "crossrunenv.h"
-#include "crossrunprio.h"
+#include "crossrunproc.h"
 
 /*! \brief version number constants
  * \sa     crossrun_get_version()
@@ -76,6 +76,13 @@ typedef struct crossrun_data* crossrun;
  * \sa     crossrun_free()
  */
 DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv environment, int priority);
+
+/*! \brief get process ID
+ * \param  handle      shell process handle
+ * \return process ID or 0 on error
+ * \sa     crossrun_open()
+ */
+DLL_EXPORT_CROSSRUN unsigned long crossrun_get_pid (crossrun handle);
 
 /*! \brief check if shell process finished
  * \param  handle      shell process handle

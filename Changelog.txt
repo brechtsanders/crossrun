@@ -1,5 +1,9 @@
 0.2.0
 
+2021-04-26  Brecht Sanders  https://github.com/brechtsanders/
+
+  * added crossrun_get_pid()
+
 2021-04-17  Brecht Sanders  https://github.com/brechtsanders/
 
   * added crossrun_get_current_process_id()

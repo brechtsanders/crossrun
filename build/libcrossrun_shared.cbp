@@ -100,14 +100,14 @@
 		</Compiler>
 		<Unit filename="../include/crossrun.h" />
 		<Unit filename="../include/crossrunenv.h" />
-		<Unit filename="../include/crossrunprio.h" />
+		<Unit filename="../include/crossrunproc.h" />
 		<Unit filename="../lib/crossrun.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../lib/crossrunenv.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../lib/crossrunprio.c">
+		<Unit filename="../lib/crossrunproc.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

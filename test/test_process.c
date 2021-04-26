@@ -53,7 +53,7 @@ int main (int argc, char* argv[])
         printf("Value of environment variable TEST: %s\n", (s ? s : "(not set)"));
         break;
       case 'i':
-        printf("PID: %lu\n", crossrun_get_current_process_id());
+        printf("PID: %lu\n", crossrun_get_current_pid());
         break;
       case 'p':
         printf("Priority: %s\n", crossrun_prio_name[crossrun_get_current_prio()]);

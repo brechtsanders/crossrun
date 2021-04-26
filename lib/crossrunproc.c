@@ -1,4 +1,4 @@
-#include "crossrunprio.h"
+#include "crossrunproc.h"
 #ifdef _WIN32
 #include <windows.h>
 #else
@@ -78,7 +78,7 @@ DLL_EXPORT_CROSSRUN int crossrun_get_current_prio ()
 }
 
 
-DLL_EXPORT_CROSSRUN unsigned long crossrun_get_current_process_id ()
+DLL_EXPORT_CROSSRUN unsigned long crossrun_get_current_pid ()
 {
 #ifdef _WIN32
   return GetCurrentProcessId();
