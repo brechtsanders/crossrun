@@ -186,9 +186,6 @@ printf("<");/////
   }
   test_result(index, (handle != NULL /*&& exitcode == 0*/));
 
-  printf("Tests succeeded:  %i\n", tests_succeeded);
-  printf("Tests failed:     %i\n", tests_failed);
-
   //run test
   announce_test(++index, "Execute with unmodified system environment");
   env = crossrunenv_create_from_system();
@@ -260,6 +257,9 @@ printf("<");/////
   }
   test_result(index, (handle != NULL && exitcode == 0));
 */
+
+  printf("Tests succeeded:  %i\n", tests_succeeded);
+  printf("Tests failed:     %i\n", tests_failed);
 
   //clean up
   free(test_process_path);
