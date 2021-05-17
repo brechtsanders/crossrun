@@ -149,8 +149,10 @@ DLL_EXPORT_CROSSRUN size_t crossrun_cpumask_count (crossrun_cpumask cpumask);
  * \param  cpumask       logical processor mask
  * \return OS-specific data
  */
-#ifdef _WIN32
+#if defined(_WIN32)
 DLL_EXPORT_CROSSRUN DWORD_PTR crossrun_cpumask_get_os_mask (crossrun_cpumask cpumask);
+#elif defined(__APPLE__)
+DLL_EXPORT_CROSSRUN unsigned long crossrun_cpumask_get_os_mask (crossrun_cpumask cpumask);
 #else
 DLL_EXPORT_CROSSRUN cpu_set_t* crossrun_cpumask_get_os_mask (crossrun_cpumask cpumask);
 #endif

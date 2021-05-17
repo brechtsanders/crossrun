@@ -84,13 +84,15 @@ int main (int argc, char* argv[])
         break;
       case 'l':
         {
-          crossrun_cpumask cpumask = crossrun_cpumask_create();
-          crossrun_cpumask_clear_all(cpumask);
-          crossrun_cpumask_set(cpumask, crossrun_cpumask_get_cpus(cpumask) - 1);
-          if (crossrun_set_current_affinity(cpumask) != 0) {
-            printf("Error setting processor affinity\n");
+          crossrun_cpumask cpumask;
+          if ((cpumask = crossrun_cpumask_create()) != NULL) {
+            crossrun_cpumask_clear_all(cpumask);
+            crossrun_cpumask_set(cpumask, crossrun_cpumask_get_cpus(cpumask) - 1);
+            if (crossrun_set_current_affinity(cpumask) != 0) {
+              printf("Error setting processor affinity\n");
+            }
+            crossrun_cpumask_free(cpumask);
           }
-          crossrun_cpumask_free(cpumask);
           if (crossrun_set_current_prio(CROSSRUN_PRIO_LOW) != 0) {
             printf("Error setting process priority\n");
           }
@@ -98,12 +100,14 @@ int main (int argc, char* argv[])
         break;
       case 'm':
         {
-          crossrun_cpumask cpumask = crossrun_cpumask_create();
-          crossrun_cpumask_set_all(cpumask);
-          if (crossrun_set_current_affinity(cpumask) != 0) {
-            printf("Error setting processor affinity\n");
+          crossrun_cpumask cpumask;
+          if ((cpumask = crossrun_cpumask_create()) != NULL) {
+            crossrun_cpumask_set_all(cpumask);
+            if (crossrun_set_current_affinity(cpumask) != 0) {
+              printf("Error setting processor affinity\n");
+            }
+            crossrun_cpumask_free(cpumask);
           }
-          crossrun_cpumask_free(cpumask);
           if (crossrun_set_current_prio(CROSSRUN_PRIO_HIGH) != 0) {
             printf("Error setting process priority\n");
           }

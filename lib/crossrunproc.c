@@ -153,8 +153,9 @@ DLL_EXPORT_CROSSRUN uint64_t crossrun_get_logical_processor_mask ()
 
 struct crossrun_cpumask_struct {
   size_t cpucount;
-#ifdef _WIN32
+#if defined(_WIN32)
   DWORD_PTR cpuset;
+#elif defined(__APPLE__)
 #else
   cpu_set_t* cpuset;
 #endif
@@ -162,6 +163,9 @@ struct crossrun_cpumask_struct {
 
 DLL_EXPORT_CROSSRUN crossrun_cpumask crossrun_cpumask_create ()
 {
+#ifdef __APPLE__
+  return NULL;
+#else
   struct crossrun_cpumask_struct* cpumask;
   if ((cpumask = (struct crossrun_cpumask_struct*)malloc(sizeof(struct crossrun_cpumask_struct))) == NULL)
     return NULL;
@@ -181,27 +185,35 @@ DLL_EXPORT_CROSSRUN crossrun_cpumask crossrun_cpumask_create ()
   CPU_ZERO_S(CPU_ALLOC_SIZE(cpumask->cpucount), cpumask->cpuset);
 #endif
   return cpumask;
+#endif
 }
 
 DLL_EXPORT_CROSSRUN void crossrun_cpumask_free (crossrun_cpumask cpumask)
 {
+#ifndef __APPLE__
   if (!cpumask)
     return;
 #ifndef _WIN32
   CPU_FREE(cpumask->cpuset);
 #endif
   free(cpumask);
+#endif
 }
 
 DLL_EXPORT_CROSSRUN size_t crossrun_cpumask_get_cpus (crossrun_cpumask cpumask)
 {
+#ifdef __APPLE__
+  return 0;
+#else
   if (!cpumask)
     return 0;
   return cpumask->cpucount;
+#endif
 }
 
 DLL_EXPORT_CROSSRUN void crossrun_cpumask_clear_all (crossrun_cpumask cpumask)
 {
+#ifndef __APPLE__
   if (!cpumask)
     return;
 #ifdef _WIN32
@@ -209,10 +221,12 @@ DLL_EXPORT_CROSSRUN void crossrun_cpumask_clear_all (crossrun_cpumask cpumask)
 #else
   CPU_ZERO_S(CPU_ALLOC_SIZE(cpumask->cpucount), cpumask->cpuset);
 #endif
+#endif
 }
 
 DLL_EXPORT_CROSSRUN void crossrun_cpumask_set_all (crossrun_cpumask cpumask)
 {
+#ifndef __APPLE__
   if (!cpumask)
     return;
 #ifdef _WIN32
@@ -222,10 +236,12 @@ DLL_EXPORT_CROSSRUN void crossrun_cpumask_set_all (crossrun_cpumask cpumask)
   for (i = 0; i < cpumask->cpucount; i++)
     CPU_SET_S(i, CPU_ALLOC_SIZE(cpumask->cpucount), cpumask->cpuset);
 #endif
+#endif
 }
 
 DLL_EXPORT_CROSSRUN void crossrun_cpumask_set (crossrun_cpumask cpumask, int cpuindex)
 {
+#ifndef __APPLE__
   if (!cpumask)
     return;
 #ifdef _WIN32
@@ -233,10 +249,14 @@ DLL_EXPORT_CROSSRUN void crossrun_cpumask_set (crossrun_cpumask cpumask, int cpu
 #else
   CPU_SET_S(cpuindex, CPU_ALLOC_SIZE(cpumask->cpucount), cpumask->cpuset);
 #endif
+#endif
 }
 
 DLL_EXPORT_CROSSRUN int crossrun_cpumask_is_set (crossrun_cpumask cpumask, int cpuindex)
 {
+#ifdef __APPLE__
+  return 0;
+#else
   if (!cpumask)
     return 0;
 #ifdef _WIN32
@@ -244,10 +264,14 @@ DLL_EXPORT_CROSSRUN int crossrun_cpumask_is_set (crossrun_cpumask cpumask, int c
 #else
   return CPU_ISSET_S(cpuindex, CPU_ALLOC_SIZE(cpumask->cpucount), cpumask->cpuset);
 #endif
+#endif
 }
 
 DLL_EXPORT_CROSSRUN size_t crossrun_cpumask_count (crossrun_cpumask cpumask)
 {
+#ifdef __APPLE__
+  return 0;
+#else
   if (!cpumask)
     return 0;
 #ifdef _WIN32
@@ -261,10 +285,13 @@ DLL_EXPORT_CROSSRUN size_t crossrun_cpumask_count (crossrun_cpumask cpumask)
 #else
   return CPU_COUNT_S(CPU_ALLOC_SIZE(cpumask->cpucount), cpumask->cpuset);
 #endif
+#endif
 }
 
-#ifdef _WIN32
+#if defined(_WIN32)
 DLL_EXPORT_CROSSRUN DWORD_PTR crossrun_cpumask_get_os_mask (crossrun_cpumask cpumask)
+#elif defined(__APPLE__)
+DLL_EXPORT_CROSSRUN unsigned long crossrun_cpumask_get_os_mask (crossrun_cpumask cpumask)
 #else
 DLL_EXPORT_CROSSRUN cpu_set_t* crossrun_cpumask_get_os_mask (crossrun_cpumask cpumask)
 #endif
@@ -274,19 +301,26 @@ DLL_EXPORT_CROSSRUN cpu_set_t* crossrun_cpumask_get_os_mask (crossrun_cpumask cp
 
 DLL_EXPORT_CROSSRUN int crossrun_get_current_affinity (crossrun_cpumask cpumask)
 {
+#ifdef __APPLE__
+  return -1;
+#else
   if (!cpumask)
     return -1;
 #ifdef _WIN32
   DWORD_PTR systemmask;
   cpumask->cpuset = 0;
-  return (GetProcessAffinityMask(GetCurrentProcess(), &cpumask->cpuset, &systemmask) ? 0 : -1);
+  return (GetProcessAffinityMask(GetCurrentProcess(), &cpumask->cpuset,&systemmask) ? 0 : -1);
 #else
   return sched_getaffinity(0, CPU_ALLOC_SIZE(cpumask->cpucount), cpumask->cpuset);
+#endif
 #endif
 }
 
 DLL_EXPORT_CROSSRUN int crossrun_set_current_affinity (crossrun_cpumask cpumask)
 {
+#ifdef __APPLE__
+  return -1;
+#else
   if (!cpumask)
     return -1;
 #ifdef _WIN32
@@ -294,7 +328,11 @@ DLL_EXPORT_CROSSRUN int crossrun_set_current_affinity (crossrun_cpumask cpumask)
 #else
   return sched_setaffinity(0, CPU_ALLOC_SIZE(cpumask->cpucount), cpumask->cpuset);
 #endif
+#endif
 }
 
 /////See also: https://linux.die.net/man/3/cpu_set
 /////See also: https://stackoverflow.com/questions/67565658/how-to-determine-which-cpus-are-online-on-linux
+////Apple macOS:
+////  https://developer.apple.com/library/archive/releasenotes/Performance/RN-AffinityAPI/index.html
+////  http://www.hybridkernel.com/2015/01/18/binding_threads_to_cores_osx.html
