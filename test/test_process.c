@@ -21,6 +21,10 @@ void show_help ()
     "  e       show value environment variable TEST\n"
     "  i       show process ID\n"
     "  p       show process priority\n"
+    "  n       show number of logical processors\n"
+    "  a       get processor affinity mask\n"
+    "  l       set low CPU affinity and process priority\n"
+    "  m       set high CPU affinity and process priority\n"
     "  x       exit with exit code 99\n"
     "  q       quit normally\n"
   );
@@ -57,6 +61,53 @@ int main (int argc, char* argv[])
         break;
       case 'p':
         printf("Priority: %s\n", crossrun_prio_name[crossrun_get_current_prio()]);
+        break;
+      case 'n':
+        printf("Logical processors: %lu\n", crossrun_get_logical_processors());
+        break;
+      case 'a':
+        {
+          crossrun_cpumask cpumask = crossrun_cpumask_create();
+          if (crossrun_get_current_affinity(cpumask) != 0) {
+            printf("Error getting affinity mask\n");
+          } else {
+            int i;
+            int n = crossrun_cpumask_get_cpus(cpumask);
+            printf("Affinity mask: ");
+            for (i = n; i-- > 0; ) {
+              printf("%i", (crossrun_cpumask_is_set(cpumask, i) ? 1 : 0));
+            }
+            printf("\n");
+          }
+          crossrun_cpumask_free(cpumask);
+        }
+        break;
+      case 'l':
+        {
+          crossrun_cpumask cpumask = crossrun_cpumask_create();
+          crossrun_cpumask_clear_all(cpumask);
+          crossrun_cpumask_set(cpumask, crossrun_cpumask_get_cpus(cpumask) - 1);
+          if (crossrun_set_current_affinity(cpumask) != 0) {
+            printf("Error setting processor affinity\n");
+          }
+          crossrun_cpumask_free(cpumask);
+          if (crossrun_set_current_prio(CROSSRUN_PRIO_LOW) != 0) {
+            printf("Error setting process priority\n");
+          }
+        }
+        break;
+      case 'm':
+        {
+          crossrun_cpumask cpumask = crossrun_cpumask_create();
+          crossrun_cpumask_set_all(cpumask);
+          if (crossrun_set_current_affinity(cpumask) != 0) {
+            printf("Error setting processor affinity\n");
+          }
+          crossrun_cpumask_free(cpumask);
+          if (crossrun_set_current_prio(CROSSRUN_PRIO_HIGH) != 0) {
+            printf("Error setting process priority\n");
+          }
+        }
         break;
       case 'x':
         printf("Exiting with exit code 99\n");

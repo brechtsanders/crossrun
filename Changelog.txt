@@ -1,3 +1,22 @@
+1.0.0
+
+2021-05-17  Brecht Sanders  https://github.com/brechtsanders/
+
+  * added crossrun_set_current_prio()
+  * added type crossrun_cpumask
+  * added crossrun_cpumask_create()
+  * added crossrun_cpumask_free()
+  * added crossrun_cpumask_get_cpus()
+  * added crossrun_cpumask_clear_all()
+  * added crossrun_cpumask_set_all()
+  * added crossrun_cpumask_set()
+  * added crossrun_cpumask_is_set()
+  * added crossrun_cpumask_count()
+  * added crossrun_cpumask_get_os_mask()
+  * added crossrun_get_current_affinity()
+  * added crossrun_set_current_affinity()
+  * added affinity parameter to crossrun_open()
+
 0.2.0
 
 2021-04-26  Brecht Sanders  https://github.com/brechtsanders/

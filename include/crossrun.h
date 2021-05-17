@@ -19,9 +19,9 @@
  * \{
  */
 /*! \brief major version number */
-#define CROSSRUN_VERSION_MAJOR 0
+#define CROSSRUN_VERSION_MAJOR 1
 /*! \brief minor version number */
-#define CROSSRUN_VERSION_MINOR 2
+#define CROSSRUN_VERSION_MINOR 0
 /*! \brief micro version number */
 #define CROSSRUN_VERSION_MICRO 0
 /*! @} */
@@ -72,10 +72,10 @@ typedef struct crossrun_data* crossrun;
  * \return shell process handle or NULL on error
  * \sa     crossrunenv
  * \sa     CROSSRUN_PRIO_*
- * \sa     crossrun_open()
+ * \sa     crossrun_cpumask
  * \sa     crossrun_free()
  */
-DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv environment, int priority);
+DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv environment, int priority, crossrun_cpumask affinity);
 
 /*! \brief get process ID
  * \param  handle      shell process handle

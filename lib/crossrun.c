@@ -139,7 +139,7 @@ void free_argv (char** argv)
 }
 #endif
 
-DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv environment, int priority)
+DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv environment, int priority, crossrun_cpumask affinity)
 {
   crossrun handle;
   //allocate data structure
@@ -234,6 +234,10 @@ DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv env
     free(handle);
     return NULL;
   }
+  //set requested process affinity
+  if (affinity) {
+    SetProcessAffinityMask(handle->proc_info.hProcess, crossrun_cpumask_get_os_mask(affinity));
+  }
   //clean up
   free(cmd);
   crossrunenv_free_generated(envbuf);
@@ -297,6 +301,9 @@ DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv env
     //set requested priority
     if (priority > 0 && priority <= CROSSRUN_PRIO_HIGH)
       setpriority(PRIO_PROCESS, 0, crossrun_prio_os_value[priority]);
+    //set requested process affinity
+    if (affinity)
+      crossrun_cpumask_set_current_affinity(affinity);
     //reroute standard input to read end of pipe (use loop to cover possibility of being interrupted by signal) and close other end of pipe
     while ((dup2(handle->stdin_pipe[PIPE_READ], STDIN_FILENO) == -1) && (errno == EINTR))
       ;
