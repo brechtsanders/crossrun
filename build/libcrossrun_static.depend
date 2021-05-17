@@ -42,3 +42,51 @@
 	<sys/types.h>
 	<unistd.h>
 
+1621252709 source:\\server\users\brecht\sources\cpp\crossrun\lib\crossrun.c
+	"crossrun.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<errno.h>
+	<signal.h>
+	<sys/wait.h>
+	<poll.h>
+	<sys/ioctl.h>
+	<sys/time.h>
+	<sys/resource.h>
+
+1621256578 \\server\users\brecht\sources\cpp\crossrun\include\crossrun.h
+	"crossrunenv.h"
+	"crossrunproc.h"
+
+1619435928 \\server\users\brecht\sources\cpp\crossrun\include\crossrunenv.h
+
+1621256581 \\server\users\brecht\sources\cpp\crossrun\include\crossrunproc.h
+	"crossrunenv.h"
+	<stddef.h>
+	<windows.h>
+	<sched.h>
+
+1618173159 source:\\server\users\brecht\sources\cpp\crossrun\lib\crossrunenv.c
+	"crossrunenv.h"
+	<windows.h>
+	<unistd.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1621256322 source:\\server\users\brecht\sources\cpp\crossrun\lib\crossrunproc.c
+	<windows.h>
+	<sys/resource.h>
+	<limits.h>
+	<sched.h>
+	<errno.h>
+	<sys/types.h>
+	<unistd.h>
+	<stdint.h>
+	<stdlib.h>
+	"crossrunproc.h"
+

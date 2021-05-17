@@ -88,7 +88,7 @@ int main (int argc, char* argv[])
 
   //run test
   announce_test(++index, "Execute and check if exit code is 0");
-  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_BELOW_NORMAL)) == NULL) {
+  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_BELOW_NORMAL, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
     exitcode = ~0;
   } else {
@@ -106,7 +106,7 @@ int main (int argc, char* argv[])
 
   //run test
   announce_test(++index, "Execute and check if exit code is 99");
-  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL)) == NULL) {
+  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
   } else {
     crossrun_write(handle, "x\n");
@@ -122,7 +122,7 @@ int main (int argc, char* argv[])
 
   //run test
   announce_test(++index, "Execute and close");
-  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL)) == NULL) {
+  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
     n = 0;
   } else {
@@ -143,7 +143,7 @@ int main (int argc, char* argv[])
 
   //run test
   announce_test(++index, "Execute and kill");
-  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL)) == NULL) {
+  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
   } else {
     crossrun_write(handle, "5x\n");
@@ -163,7 +163,7 @@ int main (int argc, char* argv[])
 
   //run test
   announce_test(++index, "Execute and non-blocking read");
-  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL)) == NULL) {
+  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_NORMAL, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
   } else {
     crossrun_write(handle, "3q\n");
@@ -192,7 +192,7 @@ printf("<");/////
   //run test
   announce_test(++index, "Execute with unmodified system environment");
   env = crossrunenv_create_from_system();
-  if ((handle = crossrun_open(test_process_path, env, CROSSRUN_PRIO_NORMAL)) == NULL) {
+  if ((handle = crossrun_open(test_process_path, env, CROSSRUN_PRIO_NORMAL, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
     exitcode = ~0;
   } else {
@@ -213,7 +213,7 @@ printf("<");/////
   env = crossrunenv_create_from_system();
   crossrunenv_set(&env, "TEST", "TestData");
   p = NULL;
-  if ((handle = crossrun_open(test_process_path, env, CROSSRUN_PRIO_NORMAL)) == NULL) {
+  if ((handle = crossrun_open(test_process_path, env, CROSSRUN_PRIO_NORMAL, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
     exitcode = ~0;
   } else {
@@ -235,7 +235,7 @@ printf("<");/////
 /*
   //run test
   announce_test(++index, "Execute and send large block of input");
-  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_BELOW_NORMAL)) == NULL) {
+  if ((handle = crossrun_open(test_process_path, NULL, CROSSRUN_PRIO_BELOW_NORMAL, NULL)) == NULL) {
     fprintf(stderr, "Error launching process\n");
     exitcode = ~0;
   } else {
