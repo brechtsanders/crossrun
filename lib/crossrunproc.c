@@ -11,6 +11,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 #endif
+#ifdef __APPLE__
+#include <sys/sysctl.h>
+#endif
 #include <stdint.h>
 #include <stdlib.h>
 #include "crossrunproc.h"
