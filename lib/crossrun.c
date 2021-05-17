@@ -303,7 +303,7 @@ DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv env
       setpriority(PRIO_PROCESS, 0, crossrun_prio_os_value[priority]);
     //set requested process affinity
     if (affinity)
-      crossrun_cpumask_set_current_affinity(affinity);
+      crossrun_set_current_affinity(affinity);
     //reroute standard input to read end of pipe (use loop to cover possibility of being interrupted by signal) and close other end of pipe
     while ((dup2(handle->stdin_pipe[PIPE_READ], STDIN_FILENO) == -1) && (errno == EINTR))
       ;
