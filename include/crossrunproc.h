@@ -91,7 +91,7 @@ DLL_EXPORT_CROSSRUN unsigned long crossrun_get_logical_processors ();
 typedef struct crossrun_cpumask_struct* crossrun_cpumask;
 
 /*! \brief create data structure for logical processor mask
- * \return data structure for logical processor mask or NULL on error
+ * \return data structure for logical processor mask or NULL on error (for example on platforms where affinity is not supported)
  * \sa     crossrun_cpumask
  * \sa     crossrun_cpumask_free
  */

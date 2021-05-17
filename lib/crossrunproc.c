@@ -107,14 +107,21 @@ DLL_EXPORT_CROSSRUN unsigned long crossrun_get_current_pid ()
 
 DLL_EXPORT_CROSSRUN unsigned long crossrun_get_logical_processors ()
 {
-#ifdef _WIN32
+#if defined(_WIN32)
   SYSTEM_INFO sysinfo;
   GetSystemInfo(&sysinfo);
   return sysinfo.dwNumberOfProcessors;
+#elif defined(__APPLE__)
+  int count;
+  size_t count_len = sizeof(count);
+  if (sysctlbyname("hw.logicalcpu", &count, &count_len, NULL, 0) != 0)
+    return 0;
+  return count;
 #else
   return sysconf(_SC_NPROCESSORS_CONF);
   //return sysconf(_SC_NPROCESSORS_ONLN);
 #endif
+/////See also: https://www.generacodice.com/en/articolo/41348/Finding-un-referenced-methods-in-a-C++-app
 }
 
 /*
