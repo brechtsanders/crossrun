@@ -296,7 +296,11 @@ DLL_EXPORT_CROSSRUN unsigned long crossrun_cpumask_get_os_mask (crossrun_cpumask
 DLL_EXPORT_CROSSRUN cpu_set_t* crossrun_cpumask_get_os_mask (crossrun_cpumask cpumask)
 #endif
 {
+#ifdef __APPLE__
+  return NULL;
+#else
   return cpumask->cpuset;
+#endif
 }
 
 DLL_EXPORT_CROSSRUN int crossrun_get_current_affinity (crossrun_cpumask cpumask)
