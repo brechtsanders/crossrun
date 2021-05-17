@@ -307,7 +307,7 @@ DLL_EXPORT_CROSSRUN cpu_set_t* crossrun_cpumask_get_os_mask (crossrun_cpumask cp
 #endif
 {
 #ifdef __APPLE__
-  return NULL;
+  return 0;
 #else
   return cpumask->cpuset;
 #endif
