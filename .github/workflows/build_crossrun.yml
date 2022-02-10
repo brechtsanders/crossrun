@@ -92,12 +92,12 @@ jobs:
         install: >-
           make
           mingw-w64-${{ matrix.config.arch }}-toolchain
-    - if: matrix.config.cc == 'i686-w64-mingw32-gcc.exe'
-      name: List mingw32 path
-      shell: bash
-      run: |
-         ls -l 'C:\msys64\mingw32\bin'
-         ls -l 'C:\msys2\msys64\mingw32'
+#    - if: matrix.config.cc == 'i686-w64-mingw32-gcc.exe'
+#      name: List mingw32 path
+#      shell: bash
+#      run: |
+#         ls -l 'C:\msys64\mingw32\bin'
+#         ls -l 'C:\msys2\msys64\mingw32'
 #    - if: matrix.config.cc == 'cl'
 #      uses: ilammy/msvc-dev-cmd@v1
 #      with:
