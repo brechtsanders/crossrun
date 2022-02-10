@@ -17,7 +17,7 @@ jobs:
         - {
             name: "Windows 32-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
             os: windows-latest,
-            cc: "i686-w64-mingw32-gcc.exe", cxx: "i686-w64-mingw32-g++.exe",
+            cc: "C:\\msys64\\mingw32\\bin\\i686-w64-mingw32-gcc.exe", cxx: "i686-w64-mingw32-g++.exe",
             msystem: "MINGW32", packages: "mingw-w64-i686-gcc",
             configure_method: "", build_method: "make"
           }
@@ -25,7 +25,8 @@ jobs:
             name: "Windows 64-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
             os: windows-latest,
             cc: "x86_64-w64-mingw32-gcc.exe", cxx: "x86_64-w64-mingw32-g++.exe",
-            msystem: "MINGW64", packages: "mingw-w64-x86_64-gcc",
+            msystem: "MINGW64", 
+            #packages: "mingw-w64-x86_64-gcc",
             configure_method: "", build_method: "make"
           }
         - {
@@ -53,15 +54,15 @@ jobs:
 #      shell: bash
 #      run: |
 #         echo 'C:\msys64\mingw32\bin' >> $GITHUB_PATH
-    - if: matrix.config.os == 'windows-latest'
-      name: Install build dependencies (Windows/MSYS)
-      uses: msys2/setup-msys2@v2
-      with:
-        update: false
-        msystem: ${{ matrix.config.msystem }}
-        install: >-
-          make
-          ${{ matrix.config.packages }}
+#    - if: matrix.config.os == 'windows-latest'
+#      name: Install build dependencies (Windows/MSYS)
+#      uses: msys2/setup-msys2@v2
+#      with:
+#        update: false
+#        msystem: ${{ matrix.config.msystem }}
+#        install: >-
+#          make
+#          ${{ matrix.config.packages }}
 #    - if: matrix.config.cc == 'cl'
 #      uses: ilammy/msvc-dev-cmd@v1
 #      with:
