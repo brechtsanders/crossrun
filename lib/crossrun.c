@@ -27,6 +27,8 @@
 #define PIPE_READ  0
 #define PIPE_WRITE 1
 
+#define USE_NEW_PROCESS_GROUP
+
 DLL_EXPORT_CROSSRUN void crossrun_get_version (int* pmajor, int* pminor, int* pmicro)
 {
   if (pmajor)
@@ -221,7 +223,12 @@ DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv env
 #else
   startupinfo.hStdError = handle->stdout_pipe[PIPE_WRITE];
 #endif
-  if (!CreateProcessA(NULL, cmd, NULL, NULL, TRUE, (priority > 0 && priority <= CROSSRUN_PRIO_HIGH ? crossrun_prio_os_value[priority] : 0) /*| CREATE_NEW_CONSOLE*/ | CREATE_NO_WINDOW, envbuf, NULL, &startupinfo, &handle->proc_info)) {
+#ifdef CREATE_NEW_PROCESS_GROUP
+#define CREATEPROCESS_FLAGS /*| CREATE_NEW_CONSOLE |*/ CREATE_NO_WINDOW | CREATE_NEW_PROCESS_GROUP
+#else
+#define CREATEPROCESS_FLAGS /*| CREATE_NEW_CONSOLE |*/ CREATE_NO_WINDOW
+#endif
+  if (!CreateProcessA(NULL, cmd, NULL, NULL, TRUE, CREATEPROCESS_FLAGS | (priority > 0 && priority <= CROSSRUN_PRIO_HIGH ? crossrun_prio_os_value[priority] : NORMAL_PRIORITY_CLASS), envbuf, NULL, &startupinfo, &handle->proc_info)) {
     SHOWERROR("Error in CreateProcess()")
     CloseHandle(handle->stdin_pipe[PIPE_READ]);
     CloseHandle(handle->stdin_pipe[PIPE_WRITE]);
@@ -298,6 +305,10 @@ DLL_EXPORT_CROSSRUN crossrun crossrun_open (const char* command, crossrunenv env
     return NULL;
   } else if (handle->pid == 0) {
     //child process
+#ifdef CREATE_NEW_PROCESS_GROUP
+    //set process new group
+    setpgid(0, 0);
+#endif
     //set requested priority
     if (priority > 0 && priority <= CROSSRUN_PRIO_HIGH)
       setpriority(PRIO_PROCESS, 0, crossrun_prio_os_value[priority]);

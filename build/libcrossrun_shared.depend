@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1619435576 source:z:\crossrun\lib\crossrun.c
+1644479542 source:z:\crossrun\lib\crossrun.c
 	"crossrun.h"
 	<stdio.h>
 	<stdlib.h>
@@ -15,13 +15,13 @@
 	<sys/time.h>
 	<sys/resource.h>
 
-1619697910 z:\crossrun\include\crossrun.h
+1644479636 z:\crossrun\include\crossrun.h
 	"crossrunenv.h"
 	"crossrunproc.h"
 
-1619435928 z:\crossrun\include\crossrunenv.h
+1619432328 z:\crossrun\include\crossrunenv.h
 
-1618173159 source:z:\crossrun\lib\crossrunenv.c
+1618169559 source:z:\crossrun\lib\crossrunenv.c
 	"crossrunenv.h"
 	<windows.h>
 	<unistd.h>
@@ -42,19 +42,24 @@
 	<sys/types.h>
 	<unistd.h>
 
-1619699337 z:\crossrun\include\crossrunproc.h
+1621255473 z:\crossrun\include\crossrunproc.h
 	"crossrunenv.h"
+	<stddef.h>
 	<windows.h>
+	<sched.h>
 
-1620231868 source:z:\crossrun\lib\crossrunproc.c
-	"crossrunproc.h"
+1621261782 source:z:\crossrun\lib\crossrunproc.c
 	<windows.h>
 	<sys/resource.h>
 	<limits.h>
+	<sched.h>
 	<errno.h>
 	<sys/types.h>
 	<unistd.h>
+	<sys/sysctl.h>
 	<stdint.h>
+	<stdlib.h>
+	"crossrunproc.h"
 
 1621256804 source:\\server\users\brecht\sources\cpp\crossrun\lib\crossrun.c
 	"crossrun.h"

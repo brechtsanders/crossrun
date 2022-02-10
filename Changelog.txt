@@ -1,3 +1,9 @@
+1.0.1
+
+2022-02-10  Brecht Sanders  https://github.com/brechtsanders/
+
+  * change crossrun_open() to make new process also a new process group
+
 1.0.0
 
 2021-05-17  Brecht Sanders  https://github.com/brechtsanders/
