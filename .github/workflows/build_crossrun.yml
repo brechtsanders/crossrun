@@ -15,25 +15,19 @@ jobs:
           - {
               name: "Windows 32-bit MinGW-w64 (make)",
               os: windows-latest,
-              shell: 'msys2 {0}',
-              msystem: MINGW32,
+              shell: 'msys2 {0}', msystem: MINGW32,
               arch: i686,
-              cc: x86_64-w64-mingw32-gcc.exe,
-              cxx: x86_64-w64-mingw32-g++.exe,
-              configure_method: "",
-              build_method: make,
+              cc: i686-w64-mingw32-gcc.exe, cxx: i686-w64-mingw32-g++.exe,
+              configure_method: "", build_method: make,
               artifact: "win64-MinGW.tar.bz2"
             }
           - {
               name: "Windows 64-bit MinGW-w64 (make)",
               os: windows-latest,
-              shell: 'msys2 {0}',
-              msystem: "MINGW64", 
+              shell: 'msys2 {0}', msystem: "MINGW64",
               arch: x86_64,
-              cc: x86_64-w64-mingw32-gcc.exe,
-              cxx: x86_64-w64-mingw32-g++.exe,
-              configure_method: "",
-              build_method: make,
+              cc: x86_64-w64-mingw32-gcc.exe, cxx: x86_64-w64-mingw32-g++.exe,
+              configure_method: "", build_method: make,
               artifact: "win64-MinGW.tar.bz2"
             }
           - {
@@ -41,10 +35,8 @@ jobs:
               os: macos-latest,
               shell: bash,
               arch: x86_64,
-              cc: clang,
-              cxx: clang++,
-              configure_method: "",
-              build_method: make,
+              cc: clang, cxx: clang++,
+              configure_method: "", build_method: make,
               artifact: "macos.tar.bz2"
             }
           - {
@@ -52,10 +44,8 @@ jobs:
               os: ubuntu-latest,
               shell: bash,
               arch: x86_64,
-              cc: gcc,
-              cxx: g++,
-              configure_method: "",
-              build_method: make,
+              cc: gcc, cxx: g++,
+              configure_method: "", build_method: make,
               artifact: "linux.tar.bz2"
             }
           - {
@@ -64,8 +54,7 @@ jobs:
               shell: bash,
               arch: x86_64,
               cc: clang, cxx: clang++,
-              configure_method: "",
-              build_method: make,
+              configure_method: "", build_method: make,
               artifact: "linux.tar.bz2"
             }
     name: ${{ matrix.config.name }}
@@ -78,11 +67,6 @@ jobs:
       CXX: ${{ matrix.config.cxx }}
     steps:
     - uses: actions/checkout@v1
-    - if: matrix.config.cc == 'i686-w64-mingw32-gcc.exe'
-      name: Add mingw32 to path
-      shell: bash
-      run: |
-         echo 'C:\msys64\mingw32\bin' >> $GITHUB_PATH
     - if: matrix.config.os == 'windows-latest'
       name: Install build dependencies (Windows/MSYS)
       uses: msys2/setup-msys2@v2
@@ -93,11 +77,10 @@ jobs:
           make
           mingw-w64-${{ matrix.config.arch }}-toolchain
 #    - if: matrix.config.cc == 'i686-w64-mingw32-gcc.exe'
-#      name: List mingw32 path
+#      name: Add mingw32 to path
 #      shell: bash
 #      run: |
-#         ls -l 'C:\msys64\mingw32\bin'
-#         ls -l 'C:\msys2\msys64\mingw32'
+#         echo 'C:\msys64\mingw32\bin' >> $GITHUB_PATH
 #    - if: matrix.config.cc == 'cl'
 #      uses: ilammy/msvc-dev-cmd@v1
 #      with:
