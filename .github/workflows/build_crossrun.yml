@@ -8,45 +8,74 @@ on:
 
 jobs:
   build:
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
       matrix:
         config:
-        - {
-            name: "Windows 32-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
-            os: windows-latest,
-            cc: "i686-w64-mingw32-gcc.exe", cxx: "i686-w64-mingw32-g++.exe",
-            msystem: "MINGW32", packages: "mingw-w64-i686-gcc",
-            configure_method: "", build_method: "make"
-          }
-        - {
-            name: "Windows 64-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
-            os: windows-latest,
-            cc: "x86_64-w64-mingw32-gcc.exe", cxx: "x86_64-w64-mingw32-g++.exe",
-            msystem: "MINGW64", 
-            #packages: "mingw-w64-x86_64-gcc",
-            configure_method: "", build_method: "make"
-          }
-        - {
-            name: "macOS Clang (make)", artifact: "macos.tar.bz2",
-            os: macos-latest,
-            cc: "clang", cxx: "clang++",
-            configure_method: "", build_method: "make"
-          }
-        - {
-            name: "Ubuntu GCC (make)", artifact: "linux.tar.bz2",
-            os: ubuntu-latest,
-            cc: "gcc", cxx: "g++",
-            configure_method: "", build_method: "make"
-          }
-        - {
-            name: "Ubuntu Clang (make)", artifact: "linux.tar.bz2",
-            os: ubuntu-latest,
-            cc: "clang", cxx: "clang++",
-            configure_method: "", build_method: "make"
-          }
+          - {
+              name: "Windows 32-bit MinGW-w64 (make)",
+              os: windows-latest,
+              shell: 'msys2 {0}',
+              msystem: MINGW32,
+              arch: i686,
+              cc: x86_64-w64-mingw32-gcc.exe,
+              cxx: x86_64-w64-mingw32-g++.exe,
+              configure_method: "",
+              build_method: make,
+              artifact: "win64-MinGW.tar.bz2"
+            }
+          - {
+              name: "Windows 64-bit MinGW-w64 (make)",
+              os: windows-latest,
+              shell: 'msys2 {0}',
+              msystem: "MINGW64", 
+              arch: x86_64,
+              cc: x86_64-w64-mingw32-gcc.exe,
+              cxx: x86_64-w64-mingw32-g++.exe,
+              configure_method: "",
+              build_method: make,
+              artifact: "win64-MinGW.tar.bz2"
+            }
+          - {
+              name: "macOS Clang (make)",
+              os: macos-latest,
+              shell: bash,
+              arch: x86_64,
+              cc: clang,
+              cxx: clang++,
+              configure_method: "",
+              build_method: make,
+              artifact: "macos.tar.bz2"
+            }
+          - {
+              name: "Ubuntu GCC (make)",
+              os: ubuntu-latest,
+              shell: bash,
+              arch: x86_64,
+              cc: gcc,
+              cxx: g++,
+              configure_method: "",
+              build_method: make,
+              artifact: "linux.tar.bz2"
+            }
+          - {
+              name: "Ubuntu Clang (make)",
+              os: ubuntu-latest,
+              shell: bash,
+              arch: x86_64,
+              cc: clang, cxx: clang++,
+              configure_method: "",
+              build_method: make,
+              artifact: "linux.tar.bz2"
+            }
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    defaults:
+      run:
+        shell: ${{ matrix.config.shell }}
+    env:
+      CC: ${{ matrix.config.cc }}
+      CXX: ${{ matrix.config.cxx }}
     steps:
     - uses: actions/checkout@v1
     - if: matrix.config.cc == 'i686-w64-mingw32-gcc.exe'
@@ -62,7 +91,7 @@ jobs:
         msystem: ${{ matrix.config.msystem }}
         install: >-
           make
-          ${{ matrix.config.packages }}
+          mingw-w64-${{ matrix.config.arch }}-toolchain
     - if: matrix.config.cc == 'i686-w64-mingw32-gcc.exe'
       name: List mingw32 path
       shell: bash
