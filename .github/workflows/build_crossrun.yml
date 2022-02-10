@@ -18,14 +18,14 @@ jobs:
             name: "Windows 32-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
             os: windows-latest,
             cc: "i686-w64-mingw32-gcc.exe", cxx: "i686-w64-mingw32-g++.exe",
-            msystem: MINGW32,
+            msystem: "MINGW32", packages: "mingw-w64-i686-gcc",
             configure_method: "", build_method: "make"
           }
         - {
             name: "Windows 64-bit MinGW-w64 (make)", artifact: "win64-MinGW.tar.bz2",
             os: windows-latest,
             cc: "x86_64-w64-mingw32-gcc.exe", cxx: "x86_64-w64-mingw32-g++.exe",
-            msystem: MINGW64,
+            msystem: "MINGW64", packages: "mingw-w64-x86_64-gcc",
             configure_method: "", build_method: "make"
           }
         - {
@@ -61,6 +61,7 @@ jobs:
         msystem: ${{ matrix.config.msystem }}
         install: >-
           make
+          ${{ matrix.config.packages }}
 #    - if: matrix.config.cc == 'cl'
 #      uses: ilammy/msvc-dev-cmd@v1
 #      with:
