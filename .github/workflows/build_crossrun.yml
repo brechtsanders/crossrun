@@ -54,21 +54,21 @@ jobs:
       shell: bash
       run: |
          echo 'C:\msys64\mingw32\bin' >> $GITHUB_PATH
+    - if: matrix.config.os == 'windows-latest'
+      name: Install build dependencies (Windows/MSYS)
+      uses: msys2/setup-msys2@v2
+      with:
+        update: false
+        msystem: ${{ matrix.config.msystem }}
+        install: >-
+          make
+          ${{ matrix.config.packages }}
     - if: matrix.config.cc == 'i686-w64-mingw32-gcc.exe'
       name: List mingw32 path
       shell: bash
       run: |
          ls -l 'C:\msys2\msys64\mingw32'
          ls -l 'C:\msys64\mingw32\bin'
-#    - if: matrix.config.os == 'windows-latest'
-#      name: Install build dependencies (Windows/MSYS)
-#      uses: msys2/setup-msys2@v2
-#      with:
-#        update: false
-#        msystem: ${{ matrix.config.msystem }}
-#        install: >-
-#          make
-#          ${{ matrix.config.packages }}
 #    - if: matrix.config.cc == 'cl'
 #      uses: ilammy/msvc-dev-cmd@v1
 #      with:
