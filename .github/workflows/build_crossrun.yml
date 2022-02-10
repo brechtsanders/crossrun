@@ -58,6 +58,7 @@ jobs:
       name: List mingw32 path
       shell: bash
       run: |
+         ls -l 'C:\msys2\msys64\mingw32'
          ls -l 'C:\msys64\mingw32\bin'
 #    - if: matrix.config.os == 'windows-latest'
 #      name: Install build dependencies (Windows/MSYS)
